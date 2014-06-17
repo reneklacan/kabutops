@@ -4,17 +4,24 @@ module Kabutops
 
     def self.included base
       base.extend(ClassMethods)
+      base.class_eval do
+        attr_reader :params
+      end
     end
 
     module ClassMethods
 
-      def params *args
-        return @params if args.empty?
+      def params *list
+        return @params if list.empty?
 
-        args.each do |name|
-          define_method name do |value|
+        list.each do |name|
+          define_method name do |*args|
             @params ||= Hashie::Mash.new
-            @params[name] = value
+            if args.size == 1
+              @params[name] = args[0]
+            else
+              @params[name] = args
+            end
           end
         end
       end

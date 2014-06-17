@@ -6,23 +6,9 @@ module Kabutops
     include CrawlerExtensions::PStoreStorage
 
     class << self
-      attr_reader :params
+      include Parameterable
 
-      [
-        :collection,
-        :workers,
-        :proxy,
-        :cache
-      ].each do |name|
-        define_method name do |*args|
-          @params ||= Hashie::Mash.new
-          if args.size == 1
-            @params[name] = args[0]
-          else
-            @params[name] = args
-          end
-        end
-      end
+      params :collection, :proxy, :cache
 
       def adapters
         @adapters
