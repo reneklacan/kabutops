@@ -38,13 +38,13 @@ class FruitCrawler < Kabutops::Crawler
 
   elasticsearch do
     index :books
-    document :book
+    type :book
 
     data do
       id :var, :id
       url :var, :url
       some_attr :css, 'h1.bookTitle'
-      grape :lambda, ->(page) {
+      grape :lambda, ->(resource, page) {
         page.css('h3.fruit').split(',').first 
       }
 

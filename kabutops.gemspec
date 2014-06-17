@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'cachy'
   s.add_dependency 'moneta'
   s.add_dependency 'sidekiq'
+  s.add_dependency 'elasticsearch'
+  s.add_dependency 'hashie'
 
   s.add_development_dependency 'rspec', '~> 3.0.0'
 end

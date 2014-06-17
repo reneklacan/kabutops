@@ -1,10 +1,13 @@
+require 'hashie'
 require 'sidekiq'
 require 'cachy'
 require 'moneta'
 require 'pstore'
+require 'elasticsearch'
 
 Cachy.cache_store = Moneta.new(:File, dir: 'cache') # temporary
 
+require 'kabutops/parameterable'
 require 'kabutops/recipe'
 require 'kabutops/recipe_item'
 require 'kabutops/adapters/callback'

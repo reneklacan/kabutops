@@ -1,13 +1,17 @@
 module Kabutops
+
   module Adapters
+
     class MySQL < DatabaseAdapter
-      def table value
-        @table = value
-      end
+      include Parameterable
+
+      params :host, :port, :database, :user, :password, :table
 
       def nested?
         false
       end
     end
+
   end
+
 end

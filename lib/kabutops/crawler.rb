@@ -1,11 +1,11 @@
 module Kabutops
+
   class Crawler
     include CrawlerExtensions::ElasticSearch
     include CrawlerExtensions::Callback
+    include CrawlerExtensions::PStoreStorage
 
     class << self
-      include CrawlerExtensions::PStoreStorage
-
       attr_reader :params
 
       [
@@ -15,7 +15,7 @@ module Kabutops
         :cache
       ].each do |name|
         define_method name do |*args|
-          @params ||= {}
+          @params ||= Hashie::Mash.new
           if args.size == 1
             @params[name] = args[0]
           else
@@ -24,16 +24,12 @@ module Kabutops
         end
       end
 
-      def params
-        @params
-      end
-
       def adapters
         @adapters
       end
 
       def crawl! collection=nil
-        if storage(:status) == :none
+        if storage[:status] == :none
           @collection = collection || @params[:collection] || []
           @collection.each do |resource|
             raise "url must be specified" if resource[:id].nil?
@@ -48,9 +44,9 @@ module Kabutops
     end
 
     def perform resource
-      resource = resource.inject({}) { |h, (k, v)| h[k.to_sym] = v; h }
+      resource = Hashie::Mash.new(resource)
 
-      content = Cachy.cache_if(self.class.params[:cache], resource[:url]) do
+      content = Cachy.cache_if(self.class.params.cache, resource[:url]) do
         agent = Mechanize.new
         #agent.set_proxy(*self.class.params[:proxy])
         agent.get(resource[:url]).body
@@ -64,7 +60,8 @@ module Kabutops
     end
 
     def << resource
-      self.class.perform_async(resource)
+      self.class.perform_async(resource.to_hash)
     end
   end
+
 end

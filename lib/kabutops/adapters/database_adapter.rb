@@ -1,5 +1,7 @@
 module Kabutops
+
   module Adapters
+
     class DatabaseAdapter
       def data &block
         @recipe = Recipe.new
@@ -19,5 +21,7 @@ module Kabutops
         raise NotImplementedError
       end
     end
+
   end
+
 end

@@ -1,7 +1,8 @@
 module Kabutops
+
   class Recipe
     def initialize
-      @items = {}
+      @items = Hashie::Mash.new
       @nested = false
     end
 
@@ -18,7 +19,7 @@ module Kabutops
     end
 
     def process resource, page
-      result = {}
+      result = Hashie::Mash.new
 
       @items.each do |name, item|
         result[name] = case item.type
@@ -31,7 +32,7 @@ module Kabutops
         when :xpath
           page.xpath(item.value).text
         when :lambda
-          item.value.call(page)
+          item.value.call(resource, page)
         when :proc
           page.instance_eval &item.value
         else
@@ -46,4 +47,5 @@ module Kabutops
       @nested
     end
   end
+
 end

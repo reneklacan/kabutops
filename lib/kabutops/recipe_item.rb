@@ -1,4 +1,5 @@
 module Kabutops
+
   class RecipeItem
     attr_reader :name, :type, :value
 
@@ -8,4 +9,5 @@ module Kabutops
       @value = value
     end
   end
+
 end
