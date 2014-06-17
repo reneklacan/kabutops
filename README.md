@@ -30,7 +30,7 @@ class FruitCrawler < Kabutops::Crawler
   collection (1..5).map { |id|
                {
                  id: id,
-                 url: "https://www.goodreads.com/book/show/#{id}",
+                 url: "https://www.example.com/fruits/#{id}",
                }
              }.shuffle
   proxy '127.0.0.1', 81818
