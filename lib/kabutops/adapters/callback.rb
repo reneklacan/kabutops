@@ -1,6 +1,6 @@
 module Kabutops
   module Adapters
-    class Callback
+    class Callback < Base
       attr_accessor :block
 
       def initialize block

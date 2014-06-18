@@ -10,6 +10,7 @@ Cachy.cache_store = Moneta.new(:File, dir: 'cache') # temporary
 require 'kabutops/parameterable'
 require 'kabutops/recipe'
 require 'kabutops/recipe_item'
+require 'kabutops/adapters/base'
 require 'kabutops/adapters/callback'
 require 'kabutops/adapters/database_adapter'
 require 'kabutops/adapters/elastic_search'

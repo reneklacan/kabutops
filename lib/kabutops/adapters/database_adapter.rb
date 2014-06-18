@@ -2,7 +2,7 @@ module Kabutops
 
   module Adapters
 
-    class DatabaseAdapter
+    class DatabaseAdapter < Base
       def data &block
         @recipe = Recipe.new
         @recipe.instance_eval &block
@@ -10,7 +10,12 @@ module Kabutops
 
       def process resource, page
         result = @recipe.process(resource, page)
-        store(result)
+        if debug
+          puts "#{self.class.to_s} outputs:"
+          p result.to_hash
+        else
+          store(result)
+        end
       end
 
       def store result

@@ -33,6 +33,7 @@ class FruitCrawler < Kabutops::Crawler
                  url: "https://www.example.com/fruits/#{id}",
                }
              }.shuffle
+
   proxy '127.0.0.1', 81818
   cache true
 
@@ -85,3 +86,20 @@ One document will look something like this
   }
 }
 ```
+
+Debugging
+---------
+
+As we all know, crawler can't be written on the first time.
+
+Therefore there are methods for debugging
+
+```ruby
+FruitCrawler.debug_first # will take first from collection
+FruitCrawler.debug_random # will take random one
+FruitCrawler.debug_random 3 # will take 3 random resources
+FruitCrawler.debug_resource { id: '123', url: '...' }
+```
+
+These methods will print out what would be otherwise saved to the
+database but for this time there is no save to the database.
