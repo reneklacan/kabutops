@@ -18,6 +18,10 @@ module Kabutops
           params[:collection].sample(count).each{ |r| debug_resource(r) }
         end
 
+        def debug_last count=1
+          params[:collection][(0 - count)..-1].each{ |r| debug_resource(r) }
+        end
+
         def debug_resource resource
           enable_debug
           self.new.perform(resource)

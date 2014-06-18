@@ -96,8 +96,11 @@ Therefore there are methods for debugging
 
 ```ruby
 FruitCrawler.debug_first # will take first from collection
+FruitCrawler.debug_first 7 # will take first 7 resources
 FruitCrawler.debug_random # will take random one
 FruitCrawler.debug_random 3 # will take 3 random resources
+FruitCrawler.debug_last # will take last from collection
+FruitCrawler.debug_last 5 # will take last 5 resources
 FruitCrawler.debug_resource { id: '123', url: '...' }
 ```
 
