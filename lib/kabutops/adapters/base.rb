@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 module Kabutops
 
   module Adapters
@@ -11,7 +13,7 @@ module Kabutops
         @debug == true
       end
     end
-    
+
   end
 
 end

@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 {
   Kabutops::CrawlerExtensions::Debugging => [
     :debug_first,
