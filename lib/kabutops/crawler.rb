@@ -3,8 +3,8 @@ module Kabutops
   class Crawler
     include CrawlerExtensions::Debugging
     include CrawlerExtensions::PStoreStorage
-    #include CrawlerExtensions::Callback
     include CrawlerExtensions::ElasticSearch
+    include Sidekiq::Worker
 
     class << self
       include Extensions::Parameterable

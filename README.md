@@ -26,8 +26,6 @@ X and save them to the ElasticSearch.
 require 'kabutops'
 
 class GemListCrawler < Kabutops::Crawler
-  include Sidekiq::Worker
-
   # just two letters with the smallest amount of gems
   collection ['Q', 'X'].map{ |letter|
                {
@@ -61,8 +59,6 @@ class GemListCrawler < Kabutops::Crawler
 end
 
 class GemCrawler < Kabutops::Crawler
-  include Sidekiq::Worker
-
   cache true
   wait 2 # wait two seconds after each procession (we do not want to hurt rubygems)
 
