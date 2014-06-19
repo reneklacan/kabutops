@@ -3,6 +3,7 @@ module Kabutops
   module CrawlerExtensions
 
     module ElasticSearch
+
       def self.included base
         base.extend(ClassMethods)
       end

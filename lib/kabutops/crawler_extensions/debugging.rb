@@ -11,15 +11,15 @@ module Kabutops
       module ClassMethods
 
         def debug_first count=1
-          params[:collection].take(count).each{ |r| debug_resource(r) }
+          params[:collection].take(count).map{ |r| debug_resource(r) }
         end
 
         def debug_random count=1
-          params[:collection].sample(count).each{ |r| debug_resource(r) }
+          params[:collection].sample(count).map{ |r| debug_resource(r) }
         end
 
         def debug_last count=1
-          params[:collection][(0 - count)..-1].each{ |r| debug_resource(r) }
+          params[:collection][(0 - count)..-1].map{ |r| debug_resource(r) }
         end
 
         def debug_resource resource
@@ -28,7 +28,12 @@ module Kabutops
         end
 
         def enable_debug
-          @adapters.each { |a| a.enable_debug }
+          @debug = true
+          adapters.each { |a| a.enable_debug }
+        end
+
+        def debug
+          @debug == true
         end
 
       end

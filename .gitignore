@@ -1,6 +1,10 @@
 /.bundle
+/.ruby-version
+
 /log
+/Gemfile.lock
+/cache
+
 *.swp
 *.swo
 *.gem
-Gemfile.lock
