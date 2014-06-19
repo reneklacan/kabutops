@@ -13,6 +13,7 @@ module Kabutops
       include Extensions::CallbackSupport
 
       params :collection, :proxy, :cache, :wait
+      callbacks :after_crawl
 
       def adapters
         @adapters || []

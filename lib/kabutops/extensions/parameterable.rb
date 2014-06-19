@@ -16,8 +16,6 @@ module Kabutops
       module ClassMethods
 
         def params *list
-          return @params if list.empty?
-
           list.each do |name|
             define_method name do |*args|
               @params ||= Hashie::Mash.new

@@ -7,6 +7,8 @@ module Kabutops
     class DatabaseAdapter < Base
       include Extensions::CallbackSupport
 
+      callbacks :after_save
+
       def data &block
         @recipe = Recipe.new
         @recipe.instance_eval &block
