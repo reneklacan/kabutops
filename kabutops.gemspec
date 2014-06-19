@@ -5,9 +5,9 @@ require 'kabutops/version'
 Gem::Specification.new do |s|
   s.name        = 'kabutops'
   s.version     = Kabutops::VERSION
-  s.date        = '2014-06-16'
-  s.summary     = ''
-  s.description = ''
+  s.date        = Time.now.strftime('%Y-%m-%d')
+  s.summary     = 'Dead simple yet powerful Ruby crawler for easy parallel crawling with support for an anonymity.'
+  s.description = 'Dead simple yet powerful Ruby crawler for easy parallel crawling with support for an anonymity.'
   s.authors     = ['Rene Klacan']
   s.email       = 'rene@klacan.sk'
   s.files       = Dir["{lib}/**/*", "LICENSE", "README.md"]
@@ -15,15 +15,15 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/reneklacan/kabutops'
   s.license     = 'Beerware'
 
-  s.required_ruby_version = '~> 1.9'
+  s.required_ruby_version = '>= 1.9'
 
-  s.add_dependency 'mechanize'
-  s.add_dependency 'cachy'
-  s.add_dependency 'moneta'
-  s.add_dependency 'sidekiq'
-  s.add_dependency 'elasticsearch'
-  s.add_dependency 'hashie'
+  s.add_dependency 'mechanize', '~> 2.7'
+  s.add_dependency 'cachy', '~> 0.4'
+  s.add_dependency 'moneta', '~> 0.7'
+  s.add_dependency 'sidekiq', '~> 3.1'
+  s.add_dependency 'elasticsearch', '~> 1.0'
+  s.add_dependency 'hashie', '~> 3.0'
 
-  s.add_development_dependency 'rspec', '~> 3.0.0'
-  s.add_development_dependency 'rspec-mocks'
+  s.add_development_dependency 'rspec', '~> 3.0'
+  s.add_development_dependency 'rspec-mocks', '~> 3.0'
 end
