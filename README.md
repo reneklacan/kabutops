@@ -13,7 +13,7 @@ gem install kabutops
 Or you can put it in your Gemfile
 
 ```ruby
-gem 'kabutops', '~> 0.0.2'
+gem 'kabutops', '~> 0.0.3'
 ```
 
 Basic example
