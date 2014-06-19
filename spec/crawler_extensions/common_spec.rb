@@ -6,17 +6,11 @@
     :debug_resource,
     :enable_debug,
   ],
-  Kabutops::CrawlerExtensions::Callback => [
-    :callback,
-  ],
   Kabutops::CrawlerExtensions::ElasticSearch => [
     :elasticsearch,
   ],
   Kabutops::CrawlerExtensions::PStoreStorage => [
     :storage,
-  ],
-  Kabutops::CrawlerExtensions::Mysql => [
-    :mysql,
   ],
 }.each do |extension, methods|
   describe extension do

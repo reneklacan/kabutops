@@ -1,34 +1,10 @@
-Kabutops
-========
+$:.push File.expand_path("../lib", __FILE__)
 
-Installation
-------------
-
-You can install it via gem
-
-```bash
-gem install kabutops
-```
-
-Or you can put it in your Gemfile
-
-```ruby
-gem 'kabutops', '~> 0.0.2'
-```
-
-Basic example
--------------
-
-Example that will crawl information about gems that start on letter Q or
-X and save them to the ElasticSearch.
-
-```ruby
 require 'kabutops'
 
 class GemListCrawler < Kabutops::Crawler
   include Sidekiq::Worker
 
-  # just two letters with the smallest amount of gems
   collection ['Q', 'X'].map{ |letter|
                {
                  letter: letter,
@@ -97,46 +73,3 @@ end
 
 GemListCrawler.crawl!
 GemCrawler.crawl!
-```
-
-Run it via sidekiq
-
-```bash
-bundle exec sidekiq -r ./rubygems_crawler.rb -c 1
-```
-
-Documents saved in the ElasticSearch will look like this one
-
-```json
-{
-  "id": "qiita_mail",
-  "title": "qiita_mail",
-  "authors": "ongaeshi",
-  "description":" Write a gem description",
-  "downloads": {
-    "total": 2493,
-    "current_version": 580
-  }
-}
-```
-
-Debugging
----------
-
-As we all know, crawler can't be written on the first time.
-
-Therefore there are methods for debugging
-
-```ruby
-FruitCrawler.debug_first # will take first from collection
-FruitCrawler.debug_first 7 # will take first 7 resources
-FruitCrawler.debug_random # will take random one
-FruitCrawler.debug_random 3 # will take 3 random resources
-FruitCrawler.debug_last # will take last from collection
-FruitCrawler.debug_last 5 # will take last 5 resources
-FruitCrawler.debug_all # guess what it will do
-FruitCrawler.debug_resource { id: '123', url: '...' }
-```
-
-These methods will print out what would be otherwise saved to the
-database but for this time there is no save to the database.

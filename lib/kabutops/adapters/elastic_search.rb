@@ -3,7 +3,7 @@ module Kabutops
   module Adapters
 
     class ElasticSearch < DatabaseAdapter
-      include Parameterable
+      include Extensions::Parameterable
 
       params :host, :port, :index, :type
 

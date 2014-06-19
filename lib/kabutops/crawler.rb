@@ -3,30 +3,46 @@ module Kabutops
   class Crawler
     include CrawlerExtensions::Debugging
     include CrawlerExtensions::PStoreStorage
-    include CrawlerExtensions::Callback
+    #include CrawlerExtensions::Callback
     include CrawlerExtensions::ElasticSearch
 
     class << self
-      include Parameterable
+      include Extensions::Parameterable
+      include Extensions::CallbackSupport
 
-      params :collection, :proxy, :cache
+      params :collection, :proxy, :cache, :wait
 
       def adapters
-        @adapters
+        @adapters || []
       end
 
       def crawl! collection=nil
-        if storage[:status] == :none
-          @collection = collection || params[:collection] || []
-          @collection.each do |resource|
-            raise "url must be specified" if resource[:id].nil?
-            perform_async(resource)
+        @map ||= {}
+
+        if storage[:status].nil?
+          (collection || params[:collection] || []).each do |resource|
+            self << resource
           end
         end
       end
 
       def << resource
-        perform_async(resource)
+        if debug
+          params[:collection] ||= []
+          params[:collection] << resource
+          return
+        end
+
+        key = resource[:id] || resource[:url]
+
+        if key.nil?
+          raise "url must be specified for resource"
+        elsif @map[key]
+          # resource with an id already in map
+        else
+          perform_async(resource.to_hash)
+          @map[key] = resource
+        end
       end
     end
 
@@ -35,19 +51,23 @@ module Kabutops
 
       content = Cachy.cache_if(self.class.params.cache, resource[:url]) do
         agent = Mechanize.new
-        #agent.set_proxy(*self.class.params[:proxy])
+        agent.set_proxy(*self.class.params[:proxy]) if self.class.params[:proxy]
         agent.get(resource[:url]).body
       end
 
       page = Nokogiri::HTML(content)
 
+      self.class.notify(:after_crawl, resource, page)
+
       self.class.adapters.each do |adapter|
         adapter.process(resource, page)
       end
+
+      sleep self.class.params[:wait] || 0
     end
 
     def << resource
-      self.class.perform_async(resource.to_hash)
+      self.class << resource
     end
   end
 

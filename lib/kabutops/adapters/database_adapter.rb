@@ -3,6 +3,8 @@ module Kabutops
   module Adapters
 
     class DatabaseAdapter < Base
+      include Extensions::CallbackSupport
+
       def data &block
         @recipe = Recipe.new
         @recipe.instance_eval &block
@@ -15,6 +17,7 @@ module Kabutops
           p result.to_hash
         else
           store(result)
+          notify(:after_save, result)
         end
       end
 

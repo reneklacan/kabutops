@@ -1,5 +1,6 @@
 /.bundle
 /.ruby-version
+/.kabutopus.config.pstore
 
 /log
 /Gemfile.lock
