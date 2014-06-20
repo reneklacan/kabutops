@@ -25,7 +25,7 @@ module Kabutops
           end
 
           define_method :params do
-            @params ||= {}
+            @params ||= Hashie::Mash.new
           end
         end
 

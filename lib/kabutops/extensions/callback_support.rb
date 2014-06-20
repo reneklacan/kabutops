@@ -14,8 +14,11 @@ module Kabutops
       end
 
       class Manager
+        attr_reader :map, :allowed
+
         def initialize allowed=nil
           @allowed = allowed || []
+          @map ||= Hashie::Mash.new
         end
 
         def method_missing name, *args, &block
@@ -25,7 +28,6 @@ module Kabutops
             raise "Invalid callback name: #{name}"
           end
 
-          @map ||= Hashie::Mash.new
           @map[name] ||= []
           @map[name] << block
         end

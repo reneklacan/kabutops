@@ -2,11 +2,7 @@
 
 describe Kabutops::CrawlerExtensions::ElasticSearch do
   before(:each) do
-    @crawler_class = Fakes::FakeCrawler.clone
-    @crawler_class.class_eval do
-      include Kabutops::CrawlerExtensions::ElasticSearch
-    end
-    @crawler = @crawler_class.new
+    @crawler_class = Kabutops::Crawler.clone
   end
 
   describe '#callback' do

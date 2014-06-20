@@ -29,16 +29,22 @@ module Fakes
   }
 
   class FakePage
+    attr_reader :document
+
     def initialize
-      @html = Nokogiri::HTML(FAKE_PAGE_CONTENT % params)
+      @document = Nokogiri::HTML(FAKE_PAGE_CONTENT % params)
     end
 
     def method_missing name, *args, &block
       if params.include?(name)
         params[name]
       else
-        @html.public_send(name, *args, &block)
+        @document.public_send(name, *args, &block)
       end
+    end
+
+    def body
+      to_html
     end
 
     def params

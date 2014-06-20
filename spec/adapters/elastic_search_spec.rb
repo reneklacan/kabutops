@@ -10,7 +10,7 @@ describe Kabutops::Adapters::ElasticSearch do
 
   describe '#store' do
     it 'should try to index' do
-      client = double(client)
+      client = double('client')
       allow(client).to receive(:index).and_return(nil)
       expected_args = {
         index: 'fruit',

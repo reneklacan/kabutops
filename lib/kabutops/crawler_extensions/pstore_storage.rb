@@ -6,7 +6,7 @@ module Kabutops
 
     module PStoreStorage
       class Storage
-        def initialize path
+        def initialize path='.kabutopus.config.pstore'
           @storage ||= PStore.new(path)
         end
 
@@ -28,7 +28,7 @@ module Kabutops
       module ClassMethods
 
         def storage
-          @storage ||= Storage.new(".kabutopus.config.pstore")
+          @storage ||= Storage.new
         end
 
       end

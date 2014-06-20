@@ -7,6 +7,8 @@ module Kabutops
     class DatabaseAdapter < Base
       include Extensions::CallbackSupport
 
+      attr_reader :recipe
+
       callbacks :after_save
 
       def data &block
