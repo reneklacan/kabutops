@@ -87,4 +87,10 @@ describe Kabutops::CrawlerExtensions::Debugging do
       expect(@crawler_class.debug_last(3)).to eq @crawler_class.params[:collection][-3..-1]
     end
   end 
+
+  describe '#debug_all' do
+    it 'shoult return whole collection' do
+      expect(@crawler_class.debug_all).to eq @crawler_class.params[:collection]
+    end
+  end
 end
