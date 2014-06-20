@@ -10,10 +10,9 @@ module Kabutops
       params :host, :port, :index, :type
 
       def store result
-        @@client ||= Elasticsearch::Client.new
-        @@client.index(
-          index: @params[:index] || 'default',
-          type: @params[:type] || 'default',
+        client.index(
+          index: params[:index] || 'default',
+          type: params[:type] || 'default',
           id: result[:id],
           body: result.to_hash,
         )
@@ -21,6 +20,19 @@ module Kabutops
 
       def nested?
         true
+      end
+
+      protected
+
+      def client
+        @@client ||= Elasticsearch::Client.new(
+          hosts: [
+            {
+              host: params[:host] || 'localhost',
+              port: params[:port] || '9200',
+            },
+          ],
+        )
       end
     end
 
