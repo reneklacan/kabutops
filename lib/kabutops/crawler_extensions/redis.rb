@@ -12,11 +12,7 @@ module Kabutops
 
       module ClassMethods
         def redis &block
-          adapter = Adapters::Redis.new
-          adapter.instance_eval &block
-
-          @adapters ||= []
-          @adapters << adapter
+          adapters << Adapters::Redis.new(&block)
         end
       end
 

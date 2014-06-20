@@ -70,4 +70,4 @@ class GemCrawler < Kabutops::Crawler
 end
 
 GemListCrawler.crawl!
-#GemCrawler.crawl!
+GemCrawler.crawl!

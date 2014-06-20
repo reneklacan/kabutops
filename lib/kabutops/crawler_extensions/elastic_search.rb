@@ -12,11 +12,7 @@ module Kabutops
 
       module ClassMethods
         def elasticsearch &block
-          adapter = Adapters::ElasticSearch.new
-          adapter.instance_eval &block
-
-          @adapters ||= []
-          @adapters << adapter
+          adapters << Adapters::ElasticSearch.new(&block)
         end
       end
 

@@ -17,7 +17,7 @@ module Kabutops
       callbacks :after_crawl
 
       def adapters
-        @adapters || []
+        @adapters ||= []
       end
 
       def crawl! collection=nil
