@@ -1,6 +1,9 @@
 # -*- encoding : utf-8 -*-
-
+#
 $VERBOSE = nil
+
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 
 require './lib/kabutops'
 

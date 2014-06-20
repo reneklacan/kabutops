@@ -5,6 +5,7 @@
 /log
 /Gemfile.lock
 /cache
+/coverage
 
 *.swp
 *.swo

@@ -1,4 +1,4 @@
-Kabutops
+Kabutops [![Code Climate](https://codeclimate.com/github/reneklacan/kabutops.png)](https://codeclimate.com/github/reneklacan/kabutops) [![Coverage](https://codeclimate.com/github/reneklacan/kabutops/coverage.png)](https://codeclimate.com/github/reneklacan/kabutops)
 ========
 
 Installation
