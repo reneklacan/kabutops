@@ -17,6 +17,9 @@
   Kabutops::CrawlerExtensions::ElasticSearch => [
     :elasticsearch,
   ],
+  Kabutops::CrawlerExtensions::Redis => [
+    :redis,
+  ],
   Kabutops::CrawlerExtensions::PStoreStorage => [
     :storage,
   ],

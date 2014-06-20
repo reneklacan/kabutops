@@ -6,6 +6,7 @@
 /Gemfile.lock
 /cache
 /coverage
+/examples/test.rb
 
 *.swp
 *.swo
