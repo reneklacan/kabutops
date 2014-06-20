@@ -19,7 +19,7 @@ class GemListCrawler < Kabutops::Crawler
     after_crawl do |resource, page|
       links = page.xpath("//a[contains(@href, '/gems?letter=#{resource[:letter]}')]")
       links.each do |link|
-        self << {
+        GemListCrawler << {
           letter: resource[:letter],
           url: "https://rubygems.org#{link['href']}",
         }
@@ -70,4 +70,4 @@ class GemCrawler < Kabutops::Crawler
 end
 
 GemListCrawler.crawl!
-GemCrawler.crawl!
+#GemCrawler.crawl!

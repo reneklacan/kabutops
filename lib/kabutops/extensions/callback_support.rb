@@ -22,7 +22,7 @@ module Kabutops
         end
 
         def method_missing name, *args, &block
-          return unless block_given?
+          return super unless block_given?
 
           unless @allowed.include?(name)
             raise "Invalid callback name: #{name}"

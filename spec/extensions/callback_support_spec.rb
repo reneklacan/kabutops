@@ -68,6 +68,8 @@ describe Kabutops::Extensions::CallbackSupport::Manager do
 
     it 'should raise an error' do
       expect{ @manager.bullshit {} }.to raise_error
+      expect{ @manager.bullshit }.to raise_error
+      expect{ @manager.coconut }.to raise_error
     end
   end
 
