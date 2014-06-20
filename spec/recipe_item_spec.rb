@@ -1,7 +1,5 @@
 # -*- encoding : utf-8 -*-
 
-require './spec/spec_helper'
-
 describe Kabutops::RecipeItem do
   before :each do
     @page = Fakes::FakePage.new

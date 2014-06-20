@@ -1,7 +1,5 @@
 # -*- encoding : utf-8 -*-
 
-require './spec/spec_helper'
-
 describe Kabutops::CrawlerExtensions::Debugging do
   before(:each) do
     @crawler_class = Fakes::FakeCrawler.clone
