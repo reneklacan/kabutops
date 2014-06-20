@@ -51,6 +51,10 @@ describe Kabutops::Adapters::DatabaseAdapter do
       expect(@stalker).not_to have_received(:store)
       expect(@stalker).not_to have_received(:notify)
     end
+
+    it 'should raise exception if recipe is nil' do
+      expect{ @adapter.process(@resource, :page) }.to raise_error
+    end
   end
 
   describe '#store' do

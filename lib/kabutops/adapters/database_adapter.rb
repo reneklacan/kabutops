@@ -17,6 +17,8 @@ module Kabutops
       end
 
       def process resource, page
+        raise 'data block not defined' unless @recipe
+
         result = @recipe.process(resource, page)
         if debug
           puts "#{self.class.to_s} outputs:"
