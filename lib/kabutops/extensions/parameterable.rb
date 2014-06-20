@@ -8,9 +8,6 @@ module Kabutops
 
       def self.included base
         base.extend(ClassMethods)
-        base.class_eval do
-          attr_reader :params
-        end
       end
 
       module ClassMethods
@@ -25,6 +22,10 @@ module Kabutops
                 @params[name] = args
               end
             end
+          end
+
+          define_method :params do
+            @params ||= {}
           end
         end
 
