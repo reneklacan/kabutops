@@ -1,6 +1,12 @@
 # -*- encoding : utf-8 -*-
 
 {
+  Kabutops::Extensions::Parameterable => [
+    :params,
+  ],
+  Kabutops::Extensions::CallbackSupport=> [
+    :callbacks,
+  ],
   Kabutops::CrawlerExtensions::Debugging => [
     :debug_first,
     :debug_random,
@@ -17,8 +23,8 @@
 }.each do |extension, methods|
   describe extension do
     before(:each) do
-      @original_class = Fakes::FakeCrawler.clone
-      @extended_class = Fakes::FakeCrawler.clone
+      @original_class = Object.clone
+      @extended_class = Object.clone
       @extended_class.class_eval do
         include extension
       end
