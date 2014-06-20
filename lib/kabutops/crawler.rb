@@ -51,26 +51,37 @@ module Kabutops
 
     def perform resource
       resource = Hashie::Mash.new(resource)
-
-      content = Cachy.cache_if(self.class.params.cache, resource[:url]) do
-        agent = Mechanize.new
-        agent.set_proxy(*self.class.params[:proxy]) if self.class.params[:proxy]
-        agent.get(resource[:url]).body
-      end
-
-      page = Nokogiri::HTML(content)
-
-      self.class.notify(:after_crawl, resource, page)
+      page = crawl(resource)
 
       self.class.adapters.each do |adapter|
         adapter.process(resource, page)
       end
-
-      sleep self.class.params[:wait] || 0
     end
 
     def << resource
       self.class << resource
+    end
+
+    protected
+
+    def crawl resource
+      content = Cachy.cache_if(self.class.params.cache, resource[:url]) do
+        sleep self.class.params[:wait] || 0 # wait only if value is not from cache
+        agent.get(resource[:url]).body
+      end
+
+      page = Nokogiri::HTML(content)
+      self.class.notify(:after_crawl, resource, page)
+      page
+    end
+
+    def agent
+      unless @agent
+        @agent = Mechanize.new
+        @agent.set_proxy(*self.class.params[:proxy]) if self.class.params[:proxy]
+      end
+
+      @agent
     end
   end
 
