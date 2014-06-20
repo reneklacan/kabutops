@@ -3,6 +3,8 @@
 module Kabutops
 
   class Recipe
+    attr_reader :items
+
     def initialize
       @items = Hashie::Mash.new
       @nested = false
@@ -12,11 +14,11 @@ module Kabutops
       if block_given?
         recipe = Recipe.new
         recipe.instance_eval &block
-        @items[name] = RecipeItem.new(name, :recipe, recipe)
+        @items[name] = RecipeItem.new(:recipe, recipe)
         @nested = true
       else
         type, value = args[0..1]
-        @items[name] = RecipeItem.new(name, type, value)
+        @items[name] = RecipeItem.new(type, value)
       end
     end
 
@@ -24,22 +26,7 @@ module Kabutops
       result = Hashie::Mash.new
 
       @items.each do |name, item|
-        result[name] = case item.type
-        when :var
-          resource[item.value]
-        when :recipe
-          item.value.process(resource, page)
-        when :css
-          page.css(item.value).text
-        when :xpath
-          page.xpath(item.value).text
-        when :lambda
-          item.value.call(resource, page)
-        when :proc
-          page.instance_eval &item.value
-        else
-          raise "unknown recipe item type '#{item.type}'"
-        end
+        result[name] = item.process(resource, page)
       end
 
       result
