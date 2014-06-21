@@ -3,6 +3,7 @@
 module Kabutops
 
   class Crawler
+    include Extensions::Logging
     include CrawlerExtensions::Debugging
     include CrawlerExtensions::PStoreStorage
     include CrawlerExtensions::ElasticSearch
@@ -61,9 +62,9 @@ module Kabutops
         adapter.process(resource, page)
       end
     rescue Exception => e
-      puts e.message
-      puts e.backtrace.join("\n")
-      sleep 5
+      logger.error(e.message)
+      logger.error(e.backtrace.join("\n"))
+      sleep self.params[:wait] || 0
       raise e
     end
 

@@ -5,6 +5,7 @@ module Kabutops
   module Adapters
 
     class DatabaseAdapter < Base
+      include Extensions::Logging
       include Extensions::CallbackSupport
 
       attr_reader :recipe
@@ -21,8 +22,8 @@ module Kabutops
 
         result = @recipe.process(resource, page)
         if debug
-          puts "#{self.class.to_s} outputs:"
-          p result.to_hash
+          logger.info("#{self.class.to_s} outputs:")
+          logger.info(result.to_hash)
         else
           store(result)
           notify(:after_save, result)
