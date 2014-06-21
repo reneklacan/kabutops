@@ -20,6 +20,12 @@
   Kabutops::CrawlerExtensions::Redis => [
     :redis,
   ],
+  Kabutops::CrawlerExtensions::Mongo => [
+    :mongo,
+  ],
+  Kabutops::CrawlerExtensions::Sequel => [
+    :sequel,
+  ],
   Kabutops::CrawlerExtensions::PStoreStorage => [
     :storage,
   ],
@@ -47,5 +53,41 @@
       end
     end
 
+  end
+end
+
+{
+  elasticsearch: [
+    Kabutops::CrawlerExtensions::ElasticSearch,
+    Kabutops::Adapters::ElasticSearch,
+  ],
+  redis: [
+    Kabutops::CrawlerExtensions::Redis,
+    Kabutops::Adapters::Redis,
+  ],
+  mongo: [
+    Kabutops::CrawlerExtensions::Mongo,
+    Kabutops::Adapters::Mongo,
+  ],
+  sequel: [
+    Kabutops::CrawlerExtensions::Sequel,
+    Kabutops::Adapters::Sequel,
+  ],
+}.each do |name, classes|
+  extension, adapter = classes
+
+  describe extension do
+    before(:each) do
+      @crawler_class = Kabutops::Crawler.clone
+    end
+
+    describe '#callback' do
+      it 'should add right adapter' do
+        original_adapter_count = @crawler_class.adapters.count
+        @crawler_class.send(name) {}
+        expect(@crawler_class.adapters.count).to eq original_adapter_count + 1
+        expect(@crawler_class.adapters[-1]).to be_a adapter
+      end
+    end
   end
 end

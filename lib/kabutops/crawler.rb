@@ -7,6 +7,8 @@ module Kabutops
     include CrawlerExtensions::PStoreStorage
     include CrawlerExtensions::ElasticSearch
     include CrawlerExtensions::Redis
+    include CrawlerExtensions::Mongo
+    include CrawlerExtensions::Sequel
     include Sidekiq::Worker
 
     class << self
@@ -58,6 +60,11 @@ module Kabutops
       self.class.adapters.each do |adapter|
         adapter.process(resource, page)
       end
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.join("\n")
+      sleep 5
+      raise e
     end
 
     def << resource
