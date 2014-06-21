@@ -16,6 +16,7 @@ require 'mysql2'
 
 Cachy.cache_store = Moneta.new(:File, dir: 'cache') # temporary
 
+require 'kabutops/extensions/includable'
 require 'kabutops/extensions/logging'
 require 'kabutops/extensions/parameterable'
 require 'kabutops/extensions/callback_support'

@@ -5,17 +5,13 @@ module Kabutops
   module CrawlerExtensions
 
     module Sequel
-
-      def self.included base
-        base.extend(ClassMethods)
-      end
+      extend Extensions::Includable
 
       module ClassMethods
         def sequel &block
           adapters << Adapters::Sequel.new(&block)
         end
       end
-
     end
 
   end

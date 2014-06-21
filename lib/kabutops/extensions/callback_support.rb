@@ -5,13 +5,7 @@ module Kabutops
   module Extensions
 
     module CallbackSupport
-
-      def self.included base
-        base.extend(ClassMethods)
-        base.class_eval do
-          attr_reader :allowed_callbacks
-        end
-      end
+      extend Includable
 
       class Manager
         attr_reader :map, :allowed
@@ -52,15 +46,12 @@ module Kabutops
       end
 
       module ClassMethods
-
         def callbacks *args
           define_method :allowed_callbacks do
             args
           end
         end
-
       end
-
     end
 
   end

@@ -5,17 +5,13 @@ module Kabutops
   module CrawlerExtensions
 
     module Mongo
-
-      def self.included base
-        base.extend(ClassMethods)
-      end
+      extend Extensions::Includable
 
       module ClassMethods
         def mongo &block
           adapters << Adapters::Mongo.new(&block)
         end
       end
-
     end
 
   end

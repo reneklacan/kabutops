@@ -3,10 +3,7 @@ module Kabutops
   module Extensions
 
     module Logging
-
-      def self.included base
-        base.extend(ClassMethods)
-      end
+      extend Includable
 
       def logger
         self.class.logger

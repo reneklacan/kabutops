@@ -5,17 +5,13 @@ module Kabutops
   module CrawlerExtensions
 
     module ElasticSearch
-
-      def self.included base
-        base.extend(ClassMethods)
-      end
+      extend Extensions::Includable
 
       module ClassMethods
         def elasticsearch &block
           adapters << Adapters::ElasticSearch.new(&block)
         end
       end
-
     end
 
   end

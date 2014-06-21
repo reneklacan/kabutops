@@ -5,6 +5,8 @@ module Kabutops
   module CrawlerExtensions
 
     module PStoreStorage
+      extend Extensions::Includable
+
       class Storage
         def initialize path='.kabutopus.config.pstore'
           @storage ||= PStore.new(path)
@@ -21,22 +23,15 @@ module Kabutops
         end
       end
 
-      def self.included base
-        base.extend(ClassMethods)
-      end
-
       module ClassMethods
-
         def storage
           @storage ||= Storage.new
         end
-
       end
 
       def storage
         self.class.storage
       end
-
     end
 
   end

@@ -5,13 +5,9 @@ module Kabutops
   module CrawlerExtensions
 
     module Debugging
-
-      def self.included base
-        base.extend(ClassMethods)
-      end
+      extend Extensions::Includable
 
       module ClassMethods
-
         def debug_first count=1
           params[:collection].take(count).map{ |r| debug_resource(r) }
         end
@@ -41,9 +37,7 @@ module Kabutops
         def debug
           @debug == true
         end
-
       end
-
     end
 
   end

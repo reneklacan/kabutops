@@ -5,13 +5,9 @@ module Kabutops
   module Extensions
 
     module Parameterable
-
-      def self.included base
-        base.extend(ClassMethods)
-      end
+      extend Extensions::Includable
 
       module ClassMethods
-
         def params *list
           list.each do |name|
             define_method name do |*args|
@@ -28,9 +24,7 @@ module Kabutops
             @params ||= Hashie::Mash.new
           end
         end
-
       end
-
     end
 
   end
