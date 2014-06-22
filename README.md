@@ -1,6 +1,18 @@
 Kabutops [![Code Climate](https://codeclimate.com/github/reneklacan/kabutops.png)](https://codeclimate.com/github/reneklacan/kabutops) [![Coverage](https://codeclimate.com/github/reneklacan/kabutops/coverage.png)](https://codeclimate.com/github/reneklacan/kabutops)
 ========
 
+Kabutops is a ruby library whichs aims to simplify creating website crawlers.
+You can define what will be crawled and how it will be saved in the short class definition.
+
+With Kabutops you can save data easily to:
+* ElasticSearch
+* MongoDB
+* Redis
+* SQL Databases (via Sequel)
+
+Example for every kind of database are located
+in the [examples directory](https://github.com/reneklacan/kabutops/tree/master/examples)
+
 Installation
 ------------
 
@@ -136,3 +148,8 @@ FruitCrawler.debug_resource { id: '123', url: '...' }
 
 These methods will print out what would be otherwise saved to the
 database but for this time there is no save to the database.
+
+License
+-------
+
+This library is distributed under the Beerware license.

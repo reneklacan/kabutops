@@ -16,11 +16,7 @@ module Kabutops
         end
 
         def method_missing name, *args, &block
-          return super unless block_given?
-
-          unless @allowed.include?(name)
-            raise "Invalid callback name: #{name}"
-          end
+          return super unless block_given? && @allowed.include?(name)
 
           @map[name] ||= []
           @map[name] << block
