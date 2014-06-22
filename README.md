@@ -149,6 +149,24 @@ FruitCrawler.debug_resource { id: '123', url: '...' }
 These methods will print out what would be otherwise saved to the
 database but for this time there is no save to the database.
 
+Anonymity ala Tor
+-----------------
+
+Anonymity can be easily achieved with [Peasant](https://github.com/reneklacan/peasant) gem.
+By following [this guide](https://github.com/reneklacan/peasant/wiki/How-to-use-Peasant-with-Tor-and-Privoxy-for-scraping)
+you can create proxy instance that will forward requests to
+multiple tor instances.
+
+Then use Peasant proxy address in your Crawler class definition
+
+```ruby
+class MyCrawler < Kabutops::Crawler
+  ...
+  proxy 'localhost', 81818
+  ...
+end
+```
+
 License
 -------
 
