@@ -23,13 +23,25 @@ module Kabutops
         @adapters ||= []
       end
 
+      def reset!
+        storage[:status] = nil
+      end
+
       def crawl! collection=nil
+        reset!
+        crawl(collection)
+      end
+
+      def crawl collection=nil
         @map ||= Hashie::Mash.new
 
         if storage[:status].nil?
           (collection || params[:collection] || []).each do |resource|
             self << resource
           end
+          storage[:status] = :in_progress
+        elsif storage[:status] == :in_progress
+          # pass
         end
       end
 

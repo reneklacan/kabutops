@@ -13,6 +13,9 @@ require 'redis-namespace'
 require 'mongo'
 require 'sequel'
 require 'mysql2'
+require 'logger'
+
+require 'kabutops/configuration'
 
 Cachy.cache_store = Moneta.new(:File, dir: 'cache') # temporary
 

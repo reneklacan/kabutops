@@ -14,8 +14,9 @@ module Kabutops
         def logger
           return @@logger if defined?(@@logger)
 
-          @@logger ||= Logger.new(STDOUT)
-          #@@logger.level = Logger::WARN
+          @@logger = Logger.new(Configuration[:logger][:dev])
+          @@logger.level = Configuration[:logger][:level]
+          @@logger
         end
 
       end

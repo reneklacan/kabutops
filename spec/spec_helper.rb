@@ -7,6 +7,10 @@ CodeClimate::TestReporter.start
 
 require './lib/kabutops'
 
+Kabutops::Configuration.config do
+  logger.level = Logger::WARN
+end
+
 Dir[('./spec/support/**/*.rb')].each { |f| require f }
 Dir[('./spec/fakes/**/*.rb')].each { |f| require f }
 
