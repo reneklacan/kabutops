@@ -21,6 +21,8 @@ module Kabutops
         raise 'data block not defined' unless @recipe
 
         result = @recipe.process(resource, page)
+        result.update(updated_at: Time.now.to_i)
+
         if debug
           logger.info("#{self.class.to_s} outputs:")
           logger.info(result.to_hash)

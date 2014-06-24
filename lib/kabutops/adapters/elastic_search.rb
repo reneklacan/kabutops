@@ -18,6 +18,25 @@ module Kabutops
         )
       end
 
+      def find_outdated freshness
+        result = client.search(
+          index: params[:index] || 'default',
+          body: {
+            query: {
+              filtered: {
+                filter: {
+                  range: {
+                    updated_at: { lte: Time.now.to_i - freshness }
+                  },
+                },
+              },
+            },
+          },
+          size: 5,
+        )
+        result['hits']['hits'].map{ |hit| hit['_source'] }
+      end
+
       def nested?
         true
       end
