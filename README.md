@@ -149,6 +149,38 @@ FruitCrawler.debug_resource { id: '123', url: '...' }
 These methods will print out what would be otherwise saved to the
 database but for this time there is no save to the database.
 
+Staying up to date
+------------------
+
+Note: This feature is currently working only with ElasticSearch
+
+For this purpore there is a Watchdog. Updater have to inherit from
+this class and this class can be run as a worker via sidekiq or as a
+plain ruby script as you can see below.
+
+```ruby
+class GemUpdater < Kabutops::Watchdog
+  crawler GemCrawler
+  freshness 1*24*60*60 # 1 day
+  wait 5
+
+  callbacks do
+    on_outdated do |resource|
+      puts "#{resource[:title]} outdated!"
+      GemCrawler << {
+        url: resource[:url],
+      }
+    end
+  end
+end
+
+GemUpdater.loop
+```
+
+```bash
+ruby rubygems_updater.rb
+```
+
 Anonymity ala Tor
 -----------------
 
@@ -166,6 +198,11 @@ class MyCrawler < Kabutops::Crawler
   ...
 end
 ```
+
+TODO
+----
+
+TBD
 
 License
 -------
