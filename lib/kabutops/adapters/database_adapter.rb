@@ -10,7 +10,7 @@ module Kabutops
 
       attr_reader :recipe
 
-      callbacks :after_save
+      callbacks :after_save, :save_if
 
       def data &block
         @recipe = Recipe.new
@@ -23,10 +23,12 @@ module Kabutops
         result = @recipe.process(resource, page)
         result.update(updated_at: Time.now.to_i)
 
+        save = (notify(:save_if, resource, page, result) || []).all?
+
         if debug
           logger.info("#{self.class.to_s} outputs:")
-          logger.info(result.to_hash)
-        else
+          logger.info(save ? result.to_hash : 'not valid for save')
+        elsif save
           store(result)
           notify(:after_save, result)
         end
