@@ -16,7 +16,7 @@ module Kabutops
       include Extensions::Parameterable
       include Extensions::CallbackSupport
 
-      params :collection, :proxy, :cache, :wait
+      params :collection, :proxy, :cache, :wait, :skip_existing
       callbacks :after_crawl
 
       def adapters
@@ -68,15 +68,29 @@ module Kabutops
 
     def perform resource
       resource = Hashie::Mash.new(resource)
+      adapters = self.class.adapters
+
+      if self.class.params.skip_existing
+        adapters = self.class.adapters.select do |adapter|
+          if adapter.respond_to? :find
+            adapter.find(resource).nil?
+          else
+            true
+          end
+        end
+
+        return if adapters.nil?
+      end
+
       page = crawl(resource)
 
-      self.class.adapters.each do |adapter|
+      adapters.each do |adapter|
         adapter.process(resource, page)
       end
     rescue Exception => e
       logger.error(e.message)
       logger.error(e.backtrace.join("\n"))
-      sleep self.params[:wait] || 0
+      sleep self.class.params[:wait] || 0
       raise e
     end
 
@@ -87,7 +101,8 @@ module Kabutops
     protected
 
     def crawl resource
-      content = Cachy.cache_if(self.class.params.cache, resource[:url]) do
+      cache_key = (resource[:id] || resource[:url]).to_s
+      content = Cachy.cache_if(self.class.params.cache, cache_key) do
         sleep self.class.params[:wait] || 0 # wait only if value is not from cache
         agent.get(resource[:url]).body
       end
