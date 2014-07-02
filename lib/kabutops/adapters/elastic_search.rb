@@ -25,9 +25,20 @@ module Kabutops
             query: {
               filtered: {
                 filter: {
-                  range: {
-                    updated_at: { lte: Time.now.to_i - freshness }
-                  },
+                  and: [
+                    {
+                      or: [
+                        { range: { updated_at: { lte: Time.now.to_i - freshness } } },
+                        { missing: { field: 'updated_at' } },
+                      ]
+                    },
+                    {
+                      or: [
+                        { range: { scheduled_update_at: { lte: Time.now.to_i - 3600 } } },
+                        { missing: { field: 'scheduled_update_at' } },
+                      ]
+                    },
+                  ]
                 },
               },
             },
