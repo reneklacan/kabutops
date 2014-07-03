@@ -202,7 +202,9 @@ end
 TODO
 ----
 
-TBD
+* Watchdog for Mongo and Sequel
+* skip_existing for Mongo, Redis and Sequel
+* Spider
 
 License
 -------
