@@ -33,8 +33,6 @@ module Kabutops
       end
 
       def crawl collection=nil
-        @map ||= Hashie::Mash.new
-
         if storage[:status].nil?
           (collection || params[:collection] || []).each do |resource|
             self << resource
@@ -53,15 +51,11 @@ module Kabutops
         end
 
         key = resource[:id] || resource[:url]
-        @map ||= Hashie::Mash.new
 
         if key.nil?
           raise "url must be specified for resource"
-        elsif @map[key]
-          # resource with an id already in map
         else
           perform_async(resource.to_hash)
-          @map[key] = resource
         end
       end
     end

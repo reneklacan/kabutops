@@ -53,13 +53,6 @@ describe Kabutops::Crawler do
         expect(@stalker).to have_received(:perform_async).exactly(5).times
       end
 
-      it 'it should call perform_async only once because of duplicates' do
-        collection = 5.times.map{ @resource }
-        @crawler_class.crawl! collection
-
-        expect(@stalker).to have_received(:perform_async).once.with(@resource)
-      end
-
       it 'should store to params collection' do
         collection = 5.times.map{ @resource }
         @crawler_class.enable_debug
@@ -77,11 +70,6 @@ describe Kabutops::Crawler do
 
       it 'should call perform_async once' do
         @crawler_class << @resource
-        expect(@stalker).to have_received(:perform_async).once.with(@resource.to_hash)
-      end
-
-      it 'should call perform_async only once' do
-        10.times { @crawler_class << @resource }
         expect(@stalker).to have_received(:perform_async).once.with(@resource.to_hash)
       end
 
