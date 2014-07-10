@@ -202,9 +202,10 @@ end
 TODO
 ----
 
-* Watchdog for Mongo and Sequel
-* skip_existing for Mongo, Redis and Sequel
+* Watchdog for Mongo
+* skip_existing feature for Mongo, Redis
 * Spider
+* Drop Sequel support
 
 License
 -------
