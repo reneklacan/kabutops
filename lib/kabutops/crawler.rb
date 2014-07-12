@@ -62,19 +62,16 @@ module Kabutops
 
     def perform resource
       resource = Hashie::Mash.new(resource)
-      adapters = self.class.adapters
 
-      if self.class.params.skip_existing
-        adapters = self.class.adapters.select do |adapter|
-          if adapter.respond_to? :find
-            adapter.find(resource).nil?
-          else
-            true
-          end
+      adapters ||= self.class.adapters.select do |adapter|
+        if params.skip_existing && adapter.respond_to?(:find)
+          adapter.find(resource).nil?
+        else
+          true
         end
-
-        return if adapters.nil?
       end
+
+      return if adapters.nil?
 
       page = crawl(resource)
 
@@ -84,7 +81,7 @@ module Kabutops
     rescue Exception => e
       logger.error(e.message)
       logger.error(e.backtrace.join("\n"))
-      sleep self.class.params[:wait] || 0
+      sleep params[:wait] || 0
       raise e
     end
 
@@ -94,10 +91,14 @@ module Kabutops
 
     protected
 
+    def params
+      self.class.params
+    end
+
     def crawl resource
       cache_key = (resource[:id] || resource[:url]).to_s
-      content = Cachy.cache_if(self.class.params.cache, cache_key) do
-        sleep self.class.params[:wait] || 0 # wait only if value is not from cache
+      content = Cachy.cache_if(params.cache, cache_key) do
+        sleep params[:wait] || 0 # wait only if value is not from cache
         agent.get(resource[:url]).body
       end
 
@@ -109,7 +110,7 @@ module Kabutops
     def agent
       unless @agent
         @agent = Mechanize.new
-        @agent.set_proxy(*self.class.params[:proxy]) if self.class.params[:proxy]
+        @agent.set_proxy(*params[:proxy]) if params[:proxy]
       end
 
       @agent
