@@ -15,7 +15,8 @@ module Kabutops
       include Extensions::Parameterable
       include Extensions::CallbackSupport
 
-      params :collection, :proxy, :cache, :wait, :skip_existing
+      params :collection, :proxy, :cache, :wait,
+             :skip_existing, :agent
       callbacks :after_crawl
 
       def adapters
@@ -108,7 +109,7 @@ module Kabutops
 
     def agent
       unless @agent
-        @agent = Mechanize.new
+        @agent = params[:agent] || Mechanize.new
         @agent.set_proxy(*params[:proxy]) if params[:proxy]
       end
 

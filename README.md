@@ -198,6 +198,23 @@ class MyCrawler < Kabutops::Crawler
 end
 ```
 
+Javascript heavy site
+---------------------
+
+Crawling this kind of sites can be achieved by using non-default agent
+(default is Mechanize.new).
+
+```ruby
+class MyCrawler < Kabutops::Crawler
+  ...
+  agent Bogeyman::Client.new
+  ...
+end
+```
+
+[Bogeyman](https://github.com/reneklacan/bogeyman-ruby-client)
+is wrapper build upon Phantomjs.
+
 TODO
 ----
 
