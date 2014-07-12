@@ -9,7 +9,6 @@ module Kabutops
     include CrawlerExtensions::ElasticSearch
     include CrawlerExtensions::Redis
     include CrawlerExtensions::Mongo
-    include CrawlerExtensions::Sequel
     include Sidekiq::Worker
 
     class << self

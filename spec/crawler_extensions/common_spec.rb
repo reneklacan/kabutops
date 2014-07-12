@@ -23,9 +23,6 @@
   Kabutops::CrawlerExtensions::Mongo => [
     :mongo,
   ],
-  Kabutops::CrawlerExtensions::Sequel => [
-    :sequel,
-  ],
   Kabutops::CrawlerExtensions::PStoreStorage => [
     :storage,
   ],
@@ -68,10 +65,6 @@ end
   mongo: [
     Kabutops::CrawlerExtensions::Mongo,
     Kabutops::Adapters::Mongo,
-  ],
-  sequel: [
-    Kabutops::CrawlerExtensions::Sequel,
-    Kabutops::Adapters::Sequel,
   ],
 }.each do |name, classes|
   extension, adapter = classes
