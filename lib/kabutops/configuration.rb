@@ -24,6 +24,11 @@ module Kabutops
             dev: STDOUT,
             level: Logger::DEBUG
           },
+          redis: {
+            host: 'localhost',
+            port: 6379,
+            db: 0
+          },
         )
       end
     end

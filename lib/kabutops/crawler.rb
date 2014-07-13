@@ -63,7 +63,7 @@ module Kabutops
     def perform resource
       resource = Hashie::Mash.new(resource)
 
-      adapters ||= self.class.adapters.select do |adapter|
+      adapters = self.class.adapters.select do |adapter|
         if params.skip_existing && adapter.respond_to?(:find)
           adapter.find(resource).nil?
         else
@@ -79,8 +79,11 @@ module Kabutops
         adapter.process(resource, page)
       end
     rescue Exception => e
-      logger.error(e.message)
-      logger.error(e.backtrace.join("\n"))
+      unless self.class.debug
+        logger.error(e.message)
+        logger.error(e.backtrace.join("\n"))
+      end
+
       sleep params[:wait] || 0
       raise e
     end
