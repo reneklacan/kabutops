@@ -24,8 +24,10 @@ gem install kabutops
 Or you can put it in your Gemfile
 
 ```ruby
-gem 'kabutops', '~> 0.0.10'
+gem 'kabutops', '~> 0.0.11'
 ```
+
+You will also need Redis database installed and running.
 
 Basic example
 -------------
@@ -220,7 +222,6 @@ TODO
 
 * Watchdog for Mongo
 * skip_existing feature for Mongo, Redis
-* Spider
 
 License
 -------
