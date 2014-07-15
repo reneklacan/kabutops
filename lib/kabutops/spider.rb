@@ -5,13 +5,17 @@ module Kabutops
   class Spider < Crawler
     class << self
       params :url
-      callbacks :after_crawl, :follow_if
+      callbacks :after_crawl, :before_cache, :follow_if
 
       def debug_spider
         enable_debug
         self.new.perform({
           url: params[:url]
         })
+      end
+
+      def crawl collection=nil
+        super(collection || [{ url: params.url, }])
       end
 
       def << resource
@@ -72,7 +76,7 @@ module Kabutops
         follow = self.class.notify(:follow_if, a['href']).any?
         if follow
           self << {
-            url: a['href'],
+            url: URI.join(params.url, URI.escape(a['href'])).to_s
           }
         end
       end

@@ -17,7 +17,7 @@ module Kabutops
 
       params :collection, :proxy, :cache, :wait,
              :skip_existing, :agent
-      callbacks :after_crawl
+      callbacks :after_crawl, :before_cache
 
       def adapters
         @adapters ||= []
@@ -99,13 +99,18 @@ module Kabutops
     end
 
     def crawl resource
-      cache_key = (resource[:id] || resource[:url]).to_s
+      page = nil
+      cache_key = (resource[:id] || Digest::SHA256.hexdigest(resource[:url])).to_s
+
       content = Cachy.cache_if(params.cache, cache_key) do
         sleep params[:wait] || 0 # wait only if value is not from cache
-        agent.get(resource[:url]).body
+        body = agent.get(resource[:url]).body
+        page = Nokogiri::HTML(body)
+        self.class.notify(:before_cache, resource, page)
+        body
       end
 
-      page = Nokogiri::HTML(content)
+      page = Nokogiri::HTML(content) if page.nil?
       self.class.notify(:after_crawl, resource, page)
       page
     end
