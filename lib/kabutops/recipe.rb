@@ -17,8 +17,8 @@ module Kabutops
         @items[name] = RecipeItem.new(:recipe, recipe)
         @nested = true
       else
-        type, value = args[0..1]
-        @items[name] = RecipeItem.new(type, value)
+        type, value, convert_to = args[0..2]
+        @items[name] = RecipeItem.new(type, value, convert_to)
       end
     end
 

@@ -75,6 +75,8 @@ module Kabutops
 
       page = crawl(resource)
 
+      return if page.nil?
+
       adapters.each do |adapter|
         adapter.process(resource, page)
       end
@@ -113,6 +115,13 @@ module Kabutops
       page = Nokogiri::HTML(content) if page.nil?
       self.class.notify(:after_crawl, resource, page)
       page
+    rescue Mechanize::ResponseCodeError => e
+      if e.response_code.to_i == 404
+        nil
+      else
+        p e.response_code
+        raise
+      end
     end
 
     def agent
