@@ -125,7 +125,9 @@ module Kabutops
     end
 
     def agent
-      unless @agent
+      if params[:agent].is_a?(Proc)
+        @agent = params[:agent].call
+      elsif @agent.nil?
         @agent = params[:agent] || Mechanize.new
         @agent.set_proxy(*params[:proxy]) if params[:proxy]
       end
