@@ -5,7 +5,8 @@ module Kabutops
   class Recipe
     attr_reader :items
 
-    def initialize
+    def initialize params={}
+      @params = Hashie::Mash.new(params)
       @items = Hashie::Mash.new
       @nested = false
     end
@@ -23,10 +24,20 @@ module Kabutops
     end
 
     def process resource, page
+      if @params[:each]
+        page.xpath(@params[:each]).map do |node|
+          process_one(resource, node)
+        end
+      else
+        process_one(resource, page)
+      end
+    end
+
+    def process_one resource, node
       result = Hashie::Mash.new
 
       @items.each do |name, item|
-        result[name] = item.process(resource, page)
+        result[name] = item.process(resource, node)
       end
 
       result

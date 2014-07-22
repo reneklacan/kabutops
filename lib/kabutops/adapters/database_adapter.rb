@@ -12,25 +12,25 @@ module Kabutops
 
       callbacks :after_save, :save_if
 
-      def data &block
-        @recipe = Recipe.new
+      def data params={}, &block
+        @recipe = Recipe.new(params)
         @recipe.instance_eval &block
       end
 
       def process resource, page
         raise 'data block not defined' unless @recipe
 
-        result = @recipe.process(resource, page)
-        result.update(updated_at: Time.now.to_i)
+        [@recipe.process(resource, page)].flatten.each do |result|
+          result.update(updated_at: Time.now.to_i)
+          save = (notify(:save_if, resource, page, result) || []).all?
 
-        save = (notify(:save_if, resource, page, result) || []).all?
-
-        if debug
-          logger.info("#{self.class.to_s} outputs:")
-          logger.info(save ? result.to_hash : 'not valid for save')
-        elsif save
-          store(result)
-          notify(:after_save, result)
+          if debug
+            logger.info("#{self.class.to_s} outputs:")
+            logger.info(save ? result.to_hash : 'not valid for save')
+          elsif save
+            store(result)
+            notify(:after_save, result)
+          end
         end
       end
 
