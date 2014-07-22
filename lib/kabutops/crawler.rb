@@ -17,7 +17,7 @@ module Kabutops
 
       params :collection, :proxy, :cache, :wait,
              :skip_existing, :agent
-      callbacks :after_crawl, :before_cache
+      callbacks :after_crawl, :before_cache, :store_if
 
       def adapters
         @adapters ||= []
@@ -76,6 +76,10 @@ module Kabutops
       page = crawl(resource)
 
       return if page.nil?
+
+      save = (self.class.notify(:store_if, resource, page) || []).all?
+
+      return unless save
 
       adapters.each do |adapter|
         adapter.process(resource, page)

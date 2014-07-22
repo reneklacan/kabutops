@@ -18,11 +18,22 @@ module Kabutops
         super(collection || [{ url: params.url, }])
       end
 
+      def reset!
+        super
+        redis.keys.each{ |k| redis.del(k) }
+      end
+
       def << resource
         if resource_status(resource).nil?
           resource_status(resource, 'new')
           super
         end
+      end
+
+      def follow link
+        self << {
+          url: URI.join(params.url, URI.escape(link)).to_s
+        }
       end
 
       def resource_status resource, status=nil
@@ -73,12 +84,10 @@ module Kabutops
 
     def after_crawl resource, page
       page.css('a').each do |a|
+        next if a['href'].nil?
+
         follow = self.class.notify(:follow_if, a['href']).any?
-        if follow
-          self << {
-            url: URI.join(params.url, URI.escape(a['href'])).to_s
-          }
-        end
+        self.class.follow(a['href']) if follow
       end
     end
   end
