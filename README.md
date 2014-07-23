@@ -24,7 +24,7 @@ gem install kabutops
 Or you can put it in your Gemfile
 
 ```ruby
-gem 'kabutops', '~> 0.1.0'
+gem 'kabutops', '~> 0.1.1'
 ```
 
 You will also need Redis database installed and running.
