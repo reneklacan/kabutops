@@ -49,7 +49,7 @@ describe Kabutops::Adapters::DatabaseAdapter do
       @mocked_adapter.enable_debug
       @mocked_adapter.process(@resource, nil)
       expect(@stalker).not_to have_received(:store)
-      expect(@stalker).to have_received(:notify).once
+      expect(@stalker).to have_received(:notify).exactly(3).times
     end
 
     it 'should raise exception if recipe is nil' do
