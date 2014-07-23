@@ -25,9 +25,9 @@ module Kabutops
 
     def process resource, page
       if @params[:each]
-        page.xpath(@params[:each]).map do |node|
-          process_one(resource, node)
-        end
+        page.xpath(@params[:each]).map{ |n| process_one(resource, n) }
+      elsif @params[:each_css]
+        page.css(@params[:each_css]).map{ |n| process_one(resource, n) }
       else
         process_one(resource, page)
       end
