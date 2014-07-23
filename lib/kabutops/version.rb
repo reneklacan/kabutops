@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
 
 module Kabutops
-  VERSION = '0.0.15'
+  VERSION = '0.1.0'
 end
