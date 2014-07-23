@@ -129,6 +129,72 @@ Documents saved in the ElasticSearch will look like this one
 }
 ```
 
+Advanced
+--------
+
+```ruby
+class SomeCrawler < Kabutops::Crawler
+  collection [
+    {
+      id: 'some_id',
+      url: 'some_url.com/some_id',
+    },
+  ]
+  agent ->{
+    # this call will be called before every request
+    # you should return agent that takes 'get' method
+  }
+  proxy 'proxy_host.com', 1234 # proxy host and port
+  wait 7 # wait X seconds after every crawl
+  skip_existing true # if :id exists in db resource wont't be crawled again
+
+  elasticsearch do
+    host 'some_host.com'
+    port 12345
+    index :name_of_index
+    type :type_of_es_doc
+
+    data each: 'xpath if multiple records are located on one site' do
+      # attrs
+
+      attr1 :xpath, '//*[@class="bla"]', :int # convert value to int
+      attr2 :css, '.bla', :float # convert value to float
+    end
+
+    callbacks do
+      before_save do |result|
+        # result is a hash that will be saved to the db
+        # you can alter result before save
+      end
+
+      after_save do |result|
+        # result has been successfully saved to the db
+      end
+
+      save_if do |resource, page, result|
+        # if false or nil is returned record is not saved to the db
+      end
+    end
+  end
+
+  callbacks do
+    after_crawl do |resource, page|
+      # page has been successfully crawled
+    end
+
+    before_cache do |resource, page|
+      # if caching is enabled you can check page here
+      # by throwing exception you can interrupt caching and
+      # resource processing
+    end
+
+    store_if do
+      # if false or nil is returned page is not processed
+    end
+  end
+end
+```
+
 Debugging
 ---------
 
