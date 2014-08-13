@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'json', '~> 1.8'
   s.add_dependency 'mongo', '~> 1.10'
   s.add_dependency 'bson_ext', '~> 1.10'
-  s.add_dependency 'mysql2', '~> 0.3'
 
   s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'rspec-mocks', '~> 3.0'

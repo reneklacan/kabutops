@@ -16,7 +16,7 @@ module Kabutops
       include Extensions::CallbackSupport
 
       params :collection, :proxy, :cache, :wait,
-             :skip_existing, :agent
+             :skip_existing, :agent, :encoding
       callbacks :after_crawl, :before_cache, :store_if
 
       def adapters
@@ -111,6 +111,7 @@ module Kabutops
       content = Cachy.cache_if(params.cache, cache_key) do
         sleep params[:wait] || 0 # wait only if value is not from cache
         body = agent.get(resource[:url]).body
+        body.encode!('utf-8', params[:encoding]) if params[:encoding]
         page = Nokogiri::HTML(body)
         self.class.notify(:before_cache, resource, page)
         body

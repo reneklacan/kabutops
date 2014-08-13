@@ -29,6 +29,8 @@ module Kabutops
         page.xpath(@value).text.gsub(/\u00a0/, ' ').strip
       when :lambda, :proc
         @value.call(resource, page)
+      when :const, :static
+        @value
       else
         raise "unknown recipe item type '#{item.type}'"
       end
@@ -40,10 +42,9 @@ module Kabutops
       case @convert_to
       when nil then v
       when :int then v[/\d+/].to_i
-      when :float then v[/\d+(\.\d+)?/].to_f
+      when :float then v.gsub(',', '.')[/\d+(\.\d+)?/].to_f
       end
     end
   end
-
 
 end

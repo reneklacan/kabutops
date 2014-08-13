@@ -11,7 +11,6 @@ require 'elasticsearch'
 require 'redis'
 require 'redis-namespace'
 require 'mongo'
-require 'mysql2'
 require 'logger'
 
 require 'kabutops/configuration'
