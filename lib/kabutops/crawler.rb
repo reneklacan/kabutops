@@ -64,22 +64,13 @@ module Kabutops
       resource = Hashie::Mash.new(resource)
 
       adapters = self.class.adapters.select do |adapter|
-        if params.skip_existing && adapter.respond_to?(:find)
-          adapter.find(resource).nil?
-        else
-          true
-        end
+        params.skip_existing ? adapter.find(resource).nil? : true
       end
 
       return if adapters.nil?
-
       page = crawl(resource)
-
       return if page.nil?
-
-      save = (self.class.notify(:store_if, resource, page) || []).all?
-
-      return unless save
+      return unless (self.class.notify(:store_if, resource, page) || []).all?
 
       adapters.each do |adapter|
         adapter.process(resource, page)
@@ -105,19 +96,7 @@ module Kabutops
     end
 
     def crawl resource
-      page = nil
-      cache_key = (resource[:id] || Digest::SHA256.hexdigest(resource[:url])).to_s
-
-      content = Cachy.cache_if(params.cache, cache_key) do
-        sleep params[:wait] || 0 # wait only if value is not from cache
-        body = agent.get(resource[:url]).body
-        body.encode!('utf-8', params[:encoding]) if params[:encoding]
-        page = Nokogiri::HTML(body)
-        self.class.notify(:before_cache, resource, page)
-        body
-      end
-
-      page = Nokogiri::HTML(content) if page.nil?
+      page = get_cache_or_hit(resource)
       self.class.notify(:after_crawl, resource, page)
       page
     rescue Mechanize::ResponseCodeError => e
@@ -127,6 +106,26 @@ module Kabutops
         p e.response_code
         raise
       end
+    end
+
+    def get_cache_or_hit resource
+      cache_key = (resource[:id] || Digest::SHA256.hexdigest(resource[:url])).to_s
+      page = nil
+
+      content = Cachy.cache_if(params.cache, cache_key) do
+        sleep params[:wait] || 0 # wait only if value is not from cache
+        page = get_page(resource[:url])
+        self.class.notify(:before_cache, resource, page)
+        page.to_s
+      end
+
+      page ? page : Nokogiri::HTML(content)
+    end
+
+    def get_page url
+      body = agent.get(url).body
+      body.encode!('utf-8', params[:encoding]) if params[:encoding]
+      Nokogiri::HTML(body)
     end
 
     def agent

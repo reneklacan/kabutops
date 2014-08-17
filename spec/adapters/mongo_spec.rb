@@ -40,12 +40,6 @@ describe Kabutops::Adapters::Mongo do
     end
   end
 
-  describe '#nested?' do
-    it 'should return true' do
-      expect(@adapter.nested?).to eq true
-    end
-  end
-
   describe '#client' do
     it 'should return proper instance' do
       expect(@adapter.send(:client)).to be_a Mongo::MongoClient

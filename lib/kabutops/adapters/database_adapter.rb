@@ -41,7 +41,7 @@ module Kabutops
         raise NotImplementedError
       end
 
-      def nested?
+      def find resource
         raise NotImplementedError
       end
     end

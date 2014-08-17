@@ -9,7 +9,7 @@ describe Kabutops::Adapters::Redis do
   end
 
   describe '#store' do
-    it 'should try to index' do
+    it 'should try to save' do
       client = double('client')
       allow(client).to receive('[]=').and_return(nil)
       resource = {
@@ -25,9 +25,18 @@ describe Kabutops::Adapters::Redis do
     end
   end
 
-  describe '#nested?' do
-    it 'should return true' do
-      expect(@adapter.nested?).to eq true
+  describe '#find' do
+    it 'should try to get' do
+      client = double('client')
+      allow(client).to receive('[]').and_return(nil)
+      resource = {
+        id: '123',
+      }
+
+      @adapter.instance_eval { @@client = client }
+      @adapter.find(resource)
+
+      expect(client).to have_received('[]').with(resource[:id])
     end
   end
 

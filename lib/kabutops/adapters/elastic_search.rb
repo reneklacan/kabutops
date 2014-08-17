@@ -68,10 +68,6 @@ module Kabutops
         result['hits']['hits'].map{ |hit| hit['_source'] }
       end
 
-      def nested?
-        true
-      end
-
       protected
 
       def client

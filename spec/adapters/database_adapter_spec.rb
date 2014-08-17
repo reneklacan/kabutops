@@ -63,9 +63,9 @@ describe Kabutops::Adapters::DatabaseAdapter do
     end
   end
 
-  describe '#nested?' do
+  describe '#find?' do
     it 'should raise an error' do
-      expect{ @adapter.nested? }.to raise_error(NotImplementedError)
+      expect{ @adapter.find(:whatever) }.to raise_error(NotImplementedError)
     end
   end
 end

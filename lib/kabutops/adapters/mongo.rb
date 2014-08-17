@@ -21,10 +21,6 @@ module Kabutops
         end
       end
 
-      def nested?
-        true
-      end
-
       protected
 
       def client

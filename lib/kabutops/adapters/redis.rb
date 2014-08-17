@@ -13,8 +13,8 @@ module Kabutops
         client[result[:id]] = JSON.dump(result.to_hash)
       end
 
-      def nested?
-        true
+      def find resource
+        client[resource[:id] || resource[:url]]
       end
 
       protected
