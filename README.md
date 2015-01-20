@@ -7,7 +7,6 @@ You can define what will be crawled and how it will be saved in the short class 
 With Kabutops you can save data easily to:
 * ElasticSearch
 * MongoDB
-* Redis
 
 Example for every kind of database are located
 in the [examples directory](https://github.com/reneklacan/kabutops/tree/master/examples)
@@ -287,7 +286,7 @@ TODO
 ----
 
 * Watchdog for Mongo
-* skip_existing feature for Mongo, Redis
+* skip_existing feature for Mongo
 
 License
 -------

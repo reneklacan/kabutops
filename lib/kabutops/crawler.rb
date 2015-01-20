@@ -7,7 +7,6 @@ module Kabutops
     include CrawlerExtensions::Debugging
     include CrawlerExtensions::PStoreStorage
     include CrawlerExtensions::ElasticSearch
-    include CrawlerExtensions::Redis
     include CrawlerExtensions::Mongo
     include Sidekiq::Worker
 

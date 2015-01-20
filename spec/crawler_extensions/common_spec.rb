@@ -17,9 +17,6 @@
   Kabutops::CrawlerExtensions::ElasticSearch => [
     :elasticsearch,
   ],
-  Kabutops::CrawlerExtensions::Redis => [
-    :redis,
-  ],
   Kabutops::CrawlerExtensions::Mongo => [
     :mongo,
   ],
@@ -57,10 +54,6 @@ end
   elasticsearch: [
     Kabutops::CrawlerExtensions::ElasticSearch,
     Kabutops::Adapters::ElasticSearch,
-  ],
-  redis: [
-    Kabutops::CrawlerExtensions::Redis,
-    Kabutops::Adapters::Redis,
   ],
   mongo: [
     Kabutops::CrawlerExtensions::Mongo,
