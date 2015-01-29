@@ -18,9 +18,11 @@ module Kabutops
       end
 
       def process resource, page
-        raise 'data block not defined' unless @recipe
+        raise 'data block not defined' unless recipe
 
-        [@recipe.process(resource, page)].flatten.each do |result|
+        previous = find(resource)
+
+        [recipe.process(resource, page, previous)].flatten.each do |result|
           result.update(updated_at: Time.now.to_i)
           save = (notify(:save_if, resource, page, result) || []).all?
 

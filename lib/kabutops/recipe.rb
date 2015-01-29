@@ -23,21 +23,21 @@ module Kabutops
       end
     end
 
-    def process resource, page
+    def process resource, page, previous
       if @params[:each]
-        page.xpath(@params[:each]).map{ |n| process_one(resource, n) }
+        page.xpath(@params[:each]).map{ |n| process_one(resource, n, previous) }
       elsif @params[:each_css]
-        page.css(@params[:each_css]).map{ |n| process_one(resource, n) }
+        page.css(@params[:each_css]).map{ |n| process_one(resource, n, previous) }
       else
-        process_one(resource, page)
+        process_one(resource, page, previous)
       end
     end
 
-    def process_one resource, node
+    def process_one resource, node, previous
       result = Hashie::Mash.new
 
       @items.each do |name, item|
-        result[name] = item.process(resource, node)
+        result[name] = item.process(resource, node, previous)
       end
 
       result

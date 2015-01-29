@@ -61,9 +61,9 @@ describe Kabutops::Recipe do
 
       @recipe.instance_variable_set("@items", items)
 
-      expect(@recipe.process(@resource, @page)).to be_a Hashie::Mash
-      expect(@recipe.process(@resource, @page).keys).to eq ['watermelon', 'cucumber']
-      expect(@recipe.process(@resource, @page).values).to eq values
+      expect(@recipe.process(@resource, @page, nil)).to be_a Hashie::Mash
+      expect(@recipe.process(@resource, @page, nil).keys).to eq ['watermelon', 'cucumber']
+      expect(@recipe.process(@resource, @page, nil).values).to eq values
     end
   end
 

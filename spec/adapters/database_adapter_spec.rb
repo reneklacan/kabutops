@@ -1,71 +1,66 @@
 # -*- encoding : utf-8 -*-
 
 describe Kabutops::Adapters::DatabaseAdapter do
-  class MockedDatabaseAdapter < Kabutops::Adapters::DatabaseAdapter
-    attr_writer :stalker, :recipe
-
-    def store value
-      @stalker.store(value)
-    end
-
-    def notify key, *args
-      @stalker.notify(key, *args)
-    end
-  end
-
-  before :each do
-    @resource = Hashie::Mash.new(result: 'ok')
-    @stalker = double('whatever')
-    allow(@stalker).to receive(:store) { |value| value }
-    allow(@stalker).to receive(:notify)
-    @recipe = double('recipe')
-    allow(@recipe).to receive(:process).and_return(@resource)
-
-    @adapter = Kabutops::Adapters::DatabaseAdapter.new
-    @mocked_adapter = MockedDatabaseAdapter.new
-    @mocked_adapter.stalker = @stalker
-    @mocked_adapter.recipe = @recipe
-  end
+  subject { described_class.new }
+  let(:resource) { Hashie::Mash.new(result: 'ok') }
+  let(:recipe) { double(:recipe, process: resource) }
 
   describe '#data' do
-    it 'should set recipe' do
-      @adapter.data do
+    before do
+      allow(subject).to receive(:find).and_return(nil)
+    end
+
+    it 'creates recipe' do
+      subject.data do
         test_name :css, '.test'
       end
 
-      expect(@adapter.recipe).to be_a Kabutops::Recipe
-      expect(@adapter.recipe.items.count).to eq 1
+      expect(subject.recipe).to be_a Kabutops::Recipe
+      expect(subject.recipe.items.count).to eq 1
     end
   end
 
   describe '#process' do
-    it 'should call store' do
-      @mocked_adapter.process(@resource, :page)
-      expect(@stalker).to have_received(:store).once.with(@resource)
-      expect(@stalker).to have_received(:notify).once.with(:after_save, @resource)
+    before do
+      allow(subject).to receive(:recipe).and_return(recipe)
+      allow(subject).to receive(:find).and_return(nil)
     end
 
-    it 'should not call store in debug' do
-      @mocked_adapter.enable_debug
-      @mocked_adapter.process(@resource, nil)
-      expect(@stalker).not_to have_received(:store)
-      expect(@stalker).to have_received(:notify).exactly(3).times
+    it 'calls set of methods' do
+      expect(subject).to receive(:notify).once.with(:save_if, resource, :page, resource)
+      expect(subject).to receive(:notify).once.with(:before_save, resource)
+      expect(subject).to receive(:store).once.with(resource)
+      expect(subject).to receive(:notify).once.with(:after_save, resource)
+
+      subject.process(resource, :page)
     end
 
-    it 'should raise exception if recipe is nil' do
-      expect{ @adapter.process(@resource, :page) }.to raise_error
+    it 'doesnt call store method in debug mode' do
+      expect(subject).not_to receive(:store)
+      expect(subject).to receive(:notify).exactly(3).times
+
+      subject.enable_debug
+      subject.process(@resource, nil)
+    end
+
+    context 'recipe is nil' do
+      let(:recipe) { nil }
+
+      it 'raises exception' do
+        expect{ subject.process(@resource, :page) }.to raise_error
+      end
     end
   end
 
   describe '#store' do
-    it 'should raise an error' do
-      expect{ @adapter.store(:whatever) }.to raise_error(NotImplementedError)
+    it 'raises exception' do
+      expect{ subject.store(:whatever) }.to raise_error(NotImplementedError)
     end
   end
 
   describe '#find?' do
-    it 'should raise an error' do
-      expect{ @adapter.find(:whatever) }.to raise_error(NotImplementedError)
+    it 'raises exception' do
+      expect{ subject.find(:whatever) }.to raise_error(NotImplementedError)
     end
   end
 end
