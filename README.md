@@ -1,12 +1,11 @@
-Kabutops [![Code Climate](https://codeclimate.com/github/reneklacan/kabutops.png)](https://codeclimate.com/github/reneklacan/kabutops) [![Coverage](https://codeclimate.com/github/reneklacan/kabutops/coverage.png)](https://codeclimate.com/github/reneklacan/kabutops)
 ========
+Kabutops [![Code Climate](https://codeclimate.com/github/reneklacan/kabutops.png)](https://codeclimate.com/github/reneklacan/kabutops) [![Coverage](https://codeclimate.com/github/reneklacan/kabutops/coverage.png)](https://codeclimate.com/github/reneklacan/kabutops)
 
 Kabutops is a ruby library whichs aims to simplify creating website crawlers.
 You can define what will be crawled and how it will be saved in the short class definition.
 
 With Kabutops you can save data easily to:
 * ElasticSearch
-* MongoDB
 
 Example for every kind of database are located
 in the [examples directory](https://github.com/reneklacan/kabutops/tree/master/examples)
@@ -281,12 +280,6 @@ end
 
 [Bogeyman](https://github.com/reneklacan/bogeyman-ruby-client)
 is wrapper build upon Phantomjs.
-
-TODO
-----
-
-* Watchdog for Mongo
-* skip_existing feature for Mongo
 
 License
 -------

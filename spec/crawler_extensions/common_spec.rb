@@ -17,9 +17,6 @@
   Kabutops::CrawlerExtensions::ElasticSearch => [
     :elasticsearch,
   ],
-  Kabutops::CrawlerExtensions::Mongo => [
-    :mongo,
-  ],
   Kabutops::CrawlerExtensions::PStoreStorage => [
     :storage,
   ],
@@ -54,10 +51,6 @@ end
   elasticsearch: [
     Kabutops::CrawlerExtensions::ElasticSearch,
     Kabutops::Adapters::ElasticSearch,
-  ],
-  mongo: [
-    Kabutops::CrawlerExtensions::Mongo,
-    Kabutops::Adapters::Mongo,
   ],
 }.each do |name, classes|
   extension, adapter = classes
