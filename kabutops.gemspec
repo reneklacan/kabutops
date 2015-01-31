@@ -28,5 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'bson_ext', '~> 1.10'
 
   s.add_development_dependency 'rspec', '~> 3.0'
+  s.add_development_dependency 'pry-byebug'
   s.add_development_dependency 'rspec-mocks', '~> 3.0'
 end
