@@ -23,20 +23,19 @@ module Kabutops
         previous = find(resource)
 
         [recipe.process(resource, page, previous)].flatten.each do |result|
-          result.update(updated_at: Time.now.to_i)
-          save = (notify(:save_if, resource, page, result) || []).all?
-
-          if debug
-            logger.info("#{self.class.to_s} outputs:")
-            notify(:before_save, result) if save
-            logger.info(save ? result.to_hash : 'not valid for save')
-            notify(:after_save, result) if save
-          elsif save
-            notify(:before_save, result)
-            store(result)
-            notify(:after_save, result)
-          end
+          process_one(resource, page, result)
         end
+      end
+
+      def process_one resource, page, result
+        result.update(updated_at: Time.now.to_i)
+        save = (notify(:save_if, resource, page, result) || []).all?
+
+        logger.info("#{self.class.to_s} outputs:") if debug
+        notify(:before_save, result) if save
+        logger.info(save ? result.to_hash : 'not valid for save') if debug
+        store(result) if save && !debug
+        notify(:after_save, result) if save
       end
 
       def store result
