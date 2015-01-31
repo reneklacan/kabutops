@@ -22,19 +22,19 @@ module Kabutops
     protected
 
     def get resource, page, previous
-      case @type
+      case type
       when :var
-        resource[@value]
+        resource[value]
       when :recipe
-        @value.process(resource, page, previous)
+        value.process(resource, page, previous)
       when :css
-        page.css(@value).text.gsub(/\u00a0/, ' ').strip
+        page.css(value).text.gsub(/\u00a0/, ' ').strip
       when :xpath
-        page.xpath(@value).text.gsub(/\u00a0/, ' ').strip
+        page.xpath(value).text.gsub(/\u00a0/, ' ').strip
       when :lambda, :proc
-        @value.call(resource, page, previous)
+        value.call(resource, page, previous)
       when :const, :static
-        @value
+        value
       end
     end
 

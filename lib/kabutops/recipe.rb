@@ -3,7 +3,7 @@
 module Kabutops
 
   class Recipe
-    attr_reader :items
+    attr_reader :items, :params, :nested
 
     def initialize params={}
       @params = Hashie::Mash.new(params)
@@ -14,7 +14,7 @@ module Kabutops
     def method_missing name, *args, &block
       if block_given?
         recipe = Recipe.new
-        recipe.instance_eval &block
+        recipe.instance_eval(&block)
         @items[name] = RecipeItem.new(:recipe, recipe)
         @nested = true
       else
@@ -36,7 +36,7 @@ module Kabutops
     def process_one resource, node, previous
       result = Hashie::Mash.new
 
-      @items.each do |name, item|
+      items.each do |name, item|
         result[name] = item.process(resource, node, previous)
       end
 
