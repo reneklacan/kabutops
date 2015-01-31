@@ -1,5 +1,4 @@
-========
-Kabutops [![Code Climate](https://codeclimate.com/github/reneklacan/kabutops.png)](https://codeclimate.com/github/reneklacan/kabutops) [![Coverage](https://codeclimate.com/github/reneklacan/kabutops/coverage.png)](https://codeclimate.com/github/reneklacan/kabutops)
+# Kabutops [![Code Climate](https://codeclimate.com/github/reneklacan/kabutops.png)](https://codeclimate.com/github/reneklacan/kabutops) [![Coverage](https://codeclimate.com/github/reneklacan/kabutops/coverage.png)](https://codeclimate.com/github/reneklacan/kabutops)
 
 Kabutops is a ruby library whichs aims to simplify creating website crawlers.
 You can define what will be crawled and how it will be saved in the short class definition.
@@ -10,8 +9,7 @@ With Kabutops you can save data easily to:
 Example for every kind of database are located
 in the [examples directory](https://github.com/reneklacan/kabutops/tree/master/examples)
 
-Installation
-------------
+## Installation
 
 You can install it via gem
 
@@ -27,8 +25,7 @@ gem 'kabutops', '~> 0.1.1'
 
 You will also need Redis database installed and running.
 
-Basic example
--------------
+## Basic example
 
 Example that will crawl information about gems that start on letter Q or
 X and save them to the ElasticSearch.
@@ -127,8 +124,7 @@ Documents saved in the ElasticSearch will look like this one
 }
 ```
 
-Advanced
---------
+## Advanced
 
 ```ruby
 class SomeCrawler < Kabutops::Crawler
@@ -193,8 +189,7 @@ class SomeCrawler < Kabutops::Crawler
 end
 ```
 
-Debugging
----------
+## Debugging
 
 As we all know, crawler can't be written on the first time.
 
@@ -214,8 +209,7 @@ FruitCrawler.debug_resource { id: '123', url: '...' }
 These methods will print out what would be otherwise saved to the
 database but for this time there is no save to the database.
 
-Staying up to date
-------------------
+## Staying up to date
 
 Note: This feature is currently working only with ElasticSearch
 
@@ -246,8 +240,7 @@ GemUpdater.loop
 ruby rubygems_updater.rb
 ```
 
-Anonymity ala Tor
------------------
+## Anonymity ala Tor
 
 Anonymity can be easily achieved with [Peasant](https://github.com/reneklacan/peasant) gem.
 By following [this guide](https://github.com/reneklacan/peasant/wiki/How-to-use-Peasant-with-Tor-and-Privoxy-for-scraping)
@@ -264,8 +257,7 @@ class MyCrawler < Kabutops::Crawler
 end
 ```
 
-Javascript heavy site
----------------------
+## Javascript heavy site
 
 Crawling this kind of sites can be achieved by using non-default agent
 (default is Mechanize.new).
@@ -281,7 +273,6 @@ end
 [Bogeyman](https://github.com/reneklacan/bogeyman-ruby-client)
 is wrapper build upon Phantomjs.
 
-License
--------
+## License
 
 This library is distributed under the Beerware license.
