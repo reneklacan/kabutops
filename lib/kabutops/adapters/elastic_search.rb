@@ -68,10 +68,8 @@ module Kabutops
         result['hits']['hits'].map{ |hit| hit['_source'] }
       end
 
-      protected
-
       def client
-        @@client ||= Elasticsearch::Client.new(
+        @client ||= Elasticsearch::Client.new(
           hosts: [
             {
               host: params[:host] || 'localhost',

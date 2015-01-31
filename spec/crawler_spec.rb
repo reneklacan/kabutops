@@ -1,143 +1,119 @@
 # -*- encoding : utf-8 -*-
 
-describe Kabutops::Crawler do
-  class MockedCrawler < Kabutops::Crawler
-    attr_writer :agent
+class CustomCrawler < Kabutops::Crawler
+end
 
-    class << self
-      attr_writer :stalker, :adapters
-
-      def perform_async resource
-        @stalker.perform_async(resource)
-      end
-    end
+describe CustomCrawler do
+  subject { subject_class.new }
+  let(:subject_class) do
+    name = 'Crawler_' + SecureRandom.hex
+    eval("class #{name} < Kabutops::Crawler; end")
+    name.constantize
   end
-
-  before :each do
-    @page = Fakes::FakePage.new
-    @stalker = double('whatever')
-    allow(@stalker).to receive(:perform_async)
-    @adapters = 10.times.map{ double('adapter') }
-    @adapters.each do |adapter|
-      allow(adapter).to receive(:process)
-      allow(adapter).to receive(:enable_debug)
-    end
-    @agent = double('agent')
-    allow(@agent).to receive(:get).and_return(@page)
-
-    @crawler_class = MockedCrawler.clone
-    @crawler_class.stalker = @stalker
-    @crawler = @crawler_class.new
-
-    @resource = Hashie::Mash.new(id: 123, url: 'http://yuna.sk/fruit')
+  let(:adapters) { 10.times.map{ double(:adapter) } }
+  let(:resource) { Hashie::Mash.new(id: 123, url: 'http://yuna.sk/fruit') }
+  let(:agent) { double(:agent, page: page) }
+  let(:page) do
+    double(
+      :page,
+      body: '<body><some></some></body>',
+      to_html: 'html'
+    )
   end
 
   describe 'class methods' do
     describe '#adapters' do
-      it 'should return correct value' do
-        expect(@crawler.class.instance_variable_get('@adapters')).to be_nil
-        expect(@crawler.class.adapters).to eq []
-
-        @crawler.class.instance_variable_set('@adapters', ['list', 'of', 'adapters'])
-
-        expect(@crawler.class.adapters).not_to eq []
-        expect(@crawler.class.adapters.count).to be >= 1
+      it 'updates adapters' do
+        expect(subject_class.adapters).to eq []
+        subject_class.adapters.push('list', 'of', 'adapters')
+        expect(subject_class.adapters).not_to be_empty
       end
     end
 
     describe '#crawl!' do
-      it 'should end up with perform_async call for each resource' do
-        collection = 5.times.map{ |id| @resource.clone.update(id: id) }
-        @crawler_class.crawl! collection
-
-        expect(@stalker).to have_received(:perform_async).exactly(5).times
+      it 'creates job for every resource' do
+        collection = 5.times.map{ |id| resource.clone.update(id: id) }
+        expect {
+          subject_class.crawl! collection
+        }.to change(subject_class.jobs, :size).by(5)
       end
 
-      it 'should store to params collection' do
-        collection = 5.times.map{ @resource }
-        @crawler_class.enable_debug
-        @crawler_class.crawl! collection
+      it 'doesnt create task and stores it in params collection' do
+        collection = 5.times.map{ resource }
+        subject_class.enable_debug
+        subject_class.crawl! collection
 
-        expect(@crawler_class.params[:collection]).to eq collection
-        expect(@stalker).to_not have_received(:perform_async)
+        expect(subject_class.params[:collection]).to eq collection
+        expect(subject_class.jobs.size).to eq 0
       end
     end
 
     describe '#<<' do
-      it 'should raise an error' do
-        expect { @crawler_class << {} }.to raise_error
+      it 'raises an error' do
+        expect{ subject_class << {} }.to raise_error
       end
 
-      it 'should call perform_async once' do
-        @crawler_class << @resource
-        expect(@stalker).to have_received(:perform_async).once.with(@resource.to_hash)
+      it 'creates one job' do
+        expect {
+          subject_class << resource
+        }.to change(subject_class.jobs, :size).by(1)
       end
 
-      it 'shoud not call perform_async' do
-        @crawler_class.enable_debug
-        @crawler_class << @resource
+      it 'doesnt create a job' do
+        subject_class.enable_debug
+        subject_class << resource
 
-        expect(@stalker).to_not have_received(:perform_async)
-        expect(@crawler_class.params[:collection]).to eq [@resource]
+        expect(subject_class.jobs.size).to eq 0
+        expect(subject_class.params[:collection]).to eq [resource]
       end
     end
   end
 
   describe 'instances methods' do
     describe '#perform' do
-      it 'should call every adapter' do
-        @crawler_class.adapters = @adapters
-        @crawler.agent = @agent
-        @crawler.perform(@resource)
+      it 'delegeter to every adapter' do
+        allow(subject).to receive(:get_page).and_return(page)
+        adapters.each{ |a| expect(a).to receive(:process).with(resource, page) }
+        subject_class.adapters.push(*adapters)
 
-        @adapters.each do |adapter|
-          expect(adapter).to have_received(:process).once.with(@resource, @page.document)
-        end
+        subject.perform(resource)
       end
     end
 
     describe '#<<' do
-      it 'shoud return same value as class method' do
-        @crawler_class.instance_eval do
-          def << resource
-            'cherry'
-          end
-        end
-
-        expect(@crawler << :whatever).to eq (@crawler_class << :whatever)
+      it 'calls class method' do
+        allow(subject_class).to receive(:<<).and_return(:foo)
+        expect(subject << :whatever).to eq (subject_class << :whatever)
       end
     end
 
     describe '#crawl' do
-      it 'should call an agent' do
-        @crawler.agent = @agent
-        result = @crawler.send(:crawl, @resource)
+      it 'returns nokogiri document' do
+        allow(subject).to receive(:agent).and_return(agent)
+        expect(agent).to receive(:get).with(resource[:url]).and_return(page)
+
+        result = subject.crawl(resource)
 
         expect(result).to be_a Nokogiri::HTML::Document
-        expect(result.to_html).to eq @page.to_html
-        expect(@agent).to have_received(:get).with(@resource[:url])
+        expect(result.to_html).to include page.body
       end
     end
 
     describe '#agent' do
-      it 'should return correct value' do
-        expect(@crawler.send(:agent)).to be_a Mechanize
+      it 'defaults to instance of Mechanize' do
+        expect(subject.agent).to be_a Mechanize
       end
 
-      it 'should set proxy' do
-        crawler_class = Kabutops::Crawler.clone
-        crawler_class.instance_eval do
-          proxy 'yuna.sk', 987
-        end
-        proxy_crawler = crawler_class.new
+      it 'sets proxy' do
+        subject_class.proxy 'yuna.sk', 987
 
-        expect(proxy_crawler.send(:agent)).to be_a Mechanize
-        expect(proxy_crawler.send(:agent).proxy_addr).to eq 'yuna.sk'
-        expect(proxy_crawler.send(:agent).proxy_port).to eq 987
+        expect(subject.agent).to be_a Mechanize
+        expect(subject.agent.proxy_addr).to eq 'yuna.sk'
+        expect(subject.agent.proxy_port).to eq 987
       end
 
-      it 'should not create new agent every time' do
-        agent_ids = 10.times.map{ @crawler.send(:agent).object_id }
+      it 'doesnt create new agent every time' do
+        agent_ids = 10.times.map{ subject.agent.object_id }
         expect(agent_ids.uniq.count).to eq 1
       end
     end

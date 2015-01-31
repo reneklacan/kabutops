@@ -87,8 +87,6 @@ module Kabutops
       self.class << resource
     end
 
-    protected
-
     def params
       self.class.params
     end
