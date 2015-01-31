@@ -4,14 +4,10 @@ describe Kabutops::Adapters::ElasticSearch do
   subject { described_class.new }
   let(:client) { double(:client) }
 
-
   describe '#store' do
-    before :each do
-      allow(subject).to receive(:client).and_return(client)
-      allow(client).to receive(:index)
-    end
-
     it 'should try to index' do
+      expect(subject).to receive(:client).and_return(client)
+
       expected_args = {
         index: 'fruit',
         type: 'onion',
@@ -28,6 +24,14 @@ describe Kabutops::Adapters::ElasticSearch do
       subject.type(expected_args[:type])
       subject.store(expected_args[:body])
     end
+  end
+
+  describe '#find' do
+
+  end
+
+  describe '#find_outdated' do
+
   end
 
   describe '#client' do

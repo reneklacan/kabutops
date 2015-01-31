@@ -1,85 +1,81 @@
 # -*- encoding : utf-8 -*-
 
 describe Kabutops::Extensions::CallbackSupport do
-  before :each do
-    klass = Object.clone
-    klass.send(:include, Kabutops::Extensions::CallbackSupport)
-    klass.instance_eval do
-      callbacks :coconut, :goji, :lime
-    end
+  subject do
+    klass = Class.new
+    klass.include(Kabutops::Extensions::CallbackSupport)
+    klass.callbacks(callbacks)
 
-    @manager = double('manager')
-    allow(@manager).to receive(:notify)
-    allow(@manager).to receive(:peach)
-    allow(@manager).to receive(:pistachio)
-
-    @object = klass.new
-    @object.instance_variable_set('@manager', @manager)
+    object = klass.new
+    allow(object).to receive(:manager).and_return(manager)
+    object
   end
+
+  let(:manager) { double('manager') }
+  let(:callbacks) { [:foo, :bar, :foobar] }
 
   describe '#allowed_callbacks' do
     it 'method should be defined and return correct value' do
-      expect(@object.methods).to include :allowed_callbacks
-      expect(@object.allowed_callbacks).to eq [:coconut, :goji, :lime]
+      expect(subject.methods).to include :allowed_callbacks
+      expect(subject.allowed_callbacks).to eq callbacks
     end
   end
 
   describe '#callbacks' do
     it 'should instance eval on manager' do
-      @object.callbacks do
-        peach {}
-        pistachio {}
-      end
+      expect(manager).to receive(:foo)
+      expect(manager).to receive(:bar)
 
-      expect(@manager).to have_received(:peach).once
-      expect(@manager).to have_received(:pistachio).once
-      expect(@manager).to_not have_received(:notify)
+      subject.callbacks do
+        foo {}
+        bar {}
+      end
     end
   end
 
   describe '#notify' do
     it 'should delegate to manager' do
-      @object.notify(:coconut)
-      expect(@manager).to have_received(:notify).once
+      expect(manager).to receive(:notify)
+      subject.notify(:coconut)
     end
   end
 end
 
 describe Kabutops::Extensions::CallbackSupport::Manager do
-  before :each do
-    @allowed_callbacks = [:coconut, :goji, :lime]
-    @manager = Kabutops::Extensions::CallbackSupport::Manager.new(@allowed_callbacks)
-  end
+  subject { described_class.new(allowed_callbacks) }
+  let(:allowed_callbacks) { [:foo, :bar, :foobar] }
 
   describe '#initialize' do
-    it 'should set allowed' do
-      expect(@manager.allowed).to eq @allowed_callbacks
-      expect(@manager.map).to eq Hashie::Mash.new
-      expect(@manager.map).to be_a Hashie::Mash
+    it 'sets allowed' do
+      expect(subject.allowed).to eq allowed_callbacks
+      expect(subject.map).to be_a Hashie::Mash
     end
   end
 
   describe '#method_missing' do
-    it 'should add to map' do
-      expect(@manager.map.keys).not_to include 'coconut'
-      @manager.coconut {}
-      expect(@manager.map.keys).to include 'coconut'
+    it 'adds to map' do
+      subject.foo {}
+      expect(subject.map.keys).to include 'foo'
     end
 
-    it 'should raise an error' do
-      expect{ @manager.bullshit {} }.to raise_error
-      expect{ @manager.bullshit }.to raise_error
-      expect{ @manager.coconut }.to raise_error
+    it 'raises an error' do
+      expect{ subject.nonsense {} }.to raise_error
     end
   end
 
   describe '#notify' do
-    it 'should call back' do
-      stalker = double('stalker')
-      allow(stalker).to receive(:ping).and_return(:pong)
-      @manager.coconut { |arg| stalker.ping(arg) }
-      @manager.notify(:coconut, :olive)
-      expect(stalker).to have_received(:ping).once.with(:olive)
+    let(:blocks) { 3.times.map{ |i| double("block#{i}") } }
+    let(:map) { { foobar: blocks, foo: double(:do_not_call) } }
+
+    before do
+      expect(subject).to receive(:map).at_least(1).times.and_return(map)
+    end
+
+    it 'delegates to every block' do
+      args = [:boo, :far]
+
+      blocks.each{ |b| expect(b).to receive(:call).with(*args) }
+      subject.notify(:foobar, *args)
     end
   end
 end

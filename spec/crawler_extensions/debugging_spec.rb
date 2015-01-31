@@ -1,35 +1,6 @@
 # -*- encoding : utf-8 -*-
 
 describe Kabutops::CrawlerExtensions::Debugging do
-  class MockedCrawlerForDebugging < Kabutops::Crawler
-    class << self
-      def params
-        {
-          collection: (1..100).map{ |id|
-            {
-              id: id,
-              url: "http://example.com/#{id}",
-            }
-          },
-        }
-      end
-
-      def adapters
-        @adapters ||= 5.times.map{ Fakes::FakeAdapter.new }
-      end
-    end
-
-    def perform resource
-      resource
-    end
-  end
-
-  before(:each) do
-    #@crawler_class = Fakes::FakeCrawler.clone
-    @crawler_class = MockedCrawlerForDebugging.clone
-    @crawler = @crawler_class.new
-  end
-
   subject do
     klass = Class.new
     klass.include(Kabutops::CrawlerExtensions::Debugging)

@@ -8,6 +8,8 @@ module Kabutops
       extend Extensions::Includable
 
       class Storage
+        attr_reader :storage
+
         def initialize path='.kabutopus.config.pstore'
           @storage ||= PStore.new(path)
         end

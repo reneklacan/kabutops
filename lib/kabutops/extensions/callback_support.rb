@@ -10,41 +10,45 @@ module Kabutops
       class Manager
         attr_reader :map, :allowed
 
-        def initialize allowed=nil
-          @allowed = allowed || []
+        def initialize allowed=[]
+          @allowed = allowed
           @map ||= Hashie::Mash.new
         end
 
         def method_missing name, *args, &block
-          return super unless block_given? && @allowed.include?(name)
+          return super unless block_given? && allowed.include?(name)
 
-          @map[name] ||= []
-          @map[name] << block
+          map[name] ||= []
+          map[name] << block
         end
 
         def notify name, *args
-          return unless @map
+          raise "Not registered as valid callback: #{name}" unless allowed.include?(name)
+          return unless map
 
-          (@map[name] || []).map do |block|
+          (map[name] || []).map do |block|
             block.call(*args)
           end
         end
       end
 
       def callbacks &block
-        @manager ||= Manager.new(allowed_callbacks)
-        @manager.instance_eval &block
+        manager.instance_eval(&block)
       end
 
       def notify name, *args
+        manager.notify(name, *args)
+      end
+
+      def manager
+        raise 'No callbacks allowed' unless respond_to?(:allowed_callbacks)
         @manager ||= Manager.new(allowed_callbacks)
-        @manager.notify(name, *args)
       end
 
       module ClassMethods
         def callbacks *args
           define_method :allowed_callbacks do
-            args
+            args.flatten
           end
         end
       end

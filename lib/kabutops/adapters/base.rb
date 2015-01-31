@@ -5,8 +5,8 @@ module Kabutops
   module Adapters
 
     class Base
-      def initialize &block
-        instance_eval &block if block_given?
+      def initialize
+        yield if block_given?
       end
 
       def enable_debug
@@ -14,7 +14,7 @@ module Kabutops
       end
 
       def debug
-        @debug == true
+        !!@debug
       end
     end
 

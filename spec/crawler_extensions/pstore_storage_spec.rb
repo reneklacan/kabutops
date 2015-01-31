@@ -3,7 +3,7 @@
 describe Kabutops::CrawlerExtensions::PStoreStorage do
   subject do
     klass = Class.new
-    klass.include(Kabutops::CrawlerExtensions::PStoreStorage)
+    klass.include(described_class)
     klass.new
   end
 
@@ -18,22 +18,22 @@ describe Kabutops::CrawlerExtensions::PStoreStorage do
 end
 
 describe Kabutops::CrawlerExtensions::PStoreStorage::Storage do
-  let(:storage) { Kabutops::CrawlerExtensions::PStoreStorage::Storage.new }
+  subject { described_class.new }
 
   describe 'initialize' do
     it 'sets instance variable' do
-      expect(storage.instance_variable_get('@storage')).to be_a PStore
+      expect(subject.storage).to be_a PStore
     end
   end
 
   describe '[] + []=' do
-    it 'should set and return correct value' do
+    it 'returns correct value' do
       10.times do
         key = 10.times.map { ('a'..'z').to_a.sample }.join
         value = rand(1000)
-        storage[key] = value
+        subject[key] = value
 
-        expect(storage[key]).to eq value
+        expect(subject[key]).to eq value
       end
     end
   end
