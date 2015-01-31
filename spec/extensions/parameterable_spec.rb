@@ -2,7 +2,7 @@
 
 describe Kabutops::Extensions::Parameterable do
   describe '#params' do
-    it 'should define methods' do
+    it 'defines methods' do
       klass = Class.new
       klass.include(Kabutops::Extensions::Parameterable)
       klass.params(:method1, :method2)

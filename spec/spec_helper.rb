@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-#
+
 $VERBOSE = nil
 
 if ENV['CODECLIMATE_REPO_TOKEN']
@@ -16,7 +16,6 @@ Kabutops::Configuration.config do
 end
 
 Dir[('./spec/support/**/*.rb')].each { |f| require f }
-Dir[('./spec/fakes/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   config.order = :random

@@ -6,14 +6,14 @@ describe Kabutops::Recipe do
   let(:resource) { Hashie::Mash.new(id: '123', apple: 'green') }
 
   describe '#initialize' do
-    it 'should set values' do
+    it 'sets values' do
       expect(recipe.items).to eq Hashie::Mash.new
       expect(recipe.nested).to be_falsy
     end
   end
 
   describe '#method_missing' do
-    it 'should add normal item' do
+    it 'adds normal item' do
       recipe.normal_attr :css, '.value'
 
       expect(recipe.items.count).to eq 1
@@ -24,7 +24,7 @@ describe Kabutops::Recipe do
       expect(recipe.nested?).to eq false
     end
 
-    it 'should add recipe item' do
+    it 'adds recipe item' do
       recipe.nested_attr do
         another_attribute :xpath, '//test'
       end
@@ -46,7 +46,7 @@ describe Kabutops::Recipe do
       )
     end
 
-    it 'should return correct value' do
+    it 'returns correct value' do
       items.each do |_, item|
         expect(item).to receive(:process).with(resource, page, nil)
       end

@@ -15,14 +15,14 @@ describe Kabutops::Extensions::CallbackSupport do
   let(:callbacks) { [:foo, :bar, :foobar] }
 
   describe '#allowed_callbacks' do
-    it 'method should be defined and return correct value' do
+    it 'includes allowed callbacks' do
       expect(subject.methods).to include :allowed_callbacks
       expect(subject.allowed_callbacks).to eq callbacks
     end
   end
 
   describe '#callbacks' do
-    it 'should instance eval on manager' do
+    it 'delegates to manager' do
       expect(manager).to receive(:foo)
       expect(manager).to receive(:bar)
 
@@ -34,7 +34,7 @@ describe Kabutops::Extensions::CallbackSupport do
   end
 
   describe '#notify' do
-    it 'should delegate to manager' do
+    it 'delegates to manager' do
       expect(manager).to receive(:notify)
       subject.notify(:coconut)
     end

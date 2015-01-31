@@ -3,8 +3,7 @@
 Kabutops is a ruby library whichs aims to simplify creating website crawlers.
 You can define what will be crawled and how it will be saved in the short class definition.
 
-With Kabutops you can save data easily to:
-* ElasticSearch
+With Kabutops you can easily save data to **ElasticSearch**.
 
 Example for every kind of database are located
 in the [examples directory](https://github.com/reneklacan/kabutops/tree/master/examples)
