@@ -8,6 +8,7 @@
 /coverage
 /examples/test.rb
 
+tags
 *.swp
 *.swo
 *.gem
