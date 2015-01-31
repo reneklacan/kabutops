@@ -2,8 +2,8 @@
 
 describe Kabutops::CrawlerExtensions::PStoreStorage do
   subject do
-    klass = Object.clone
-    klass.send(:include, Kabutops::CrawlerExtensions::PStoreStorage)
+    klass = Class.new
+    klass.include(Kabutops::CrawlerExtensions::PStoreStorage)
     klass.new
   end
 

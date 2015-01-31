@@ -30,67 +30,90 @@ describe Kabutops::CrawlerExtensions::Debugging do
     @crawler = @crawler_class.new
   end
 
-  describe '#debug_resource' do
-    it 'shoult return same resource' do
-      resource = @crawler_class.params[:collection].sample
-      expect(@crawler_class.debug_resource(resource)).to eq resource
+  subject do
+    klass = Class.new
+    klass.include(Kabutops::CrawlerExtensions::Debugging)
+    allow(klass).to receive(:adapters).and_return(adapters)
+    allow(klass).to receive(:new).and_return(subject_instance)
+    allow(klass).to receive(:params).and_return(params)
+    klass
+  end
+  let(:subject_instance) { double(:subject_instance) }
+  let(:adapters) { 3.times.map{ double(:adapter) } }
+  let(:resources) do
+    (1..100).map do |id|
+      {
+        id: id,
+        url: "http://example.com/#{id}",
+      }
     end
+  end
+  let(:random_resource) { resources.sample }
+  let(:params) { { collection: resources } }
+  let(:random_count) { (2..10).to_a.sample }
 
-    it 'should enable debugging' do
-      expect(@crawler_class.debug).to eq false
-      @crawler_class.debug_resource @crawler_class.params[:collection].sample
-      expect(@crawler_class.debug).to eq true
+  before do
+    expect(subject.debug).to be_falsy
+    # every method is enabling debug mode for each adapter
+    adapters.each{ |a| expect(a).to receive(:enable_debug).at_least(:once) }
+  end
+
+  after do
+    expect(subject.debug).to be_truthy
+  end
+
+  describe '#debug_resource' do
+    it 'calls perform with given resource and enables debug mode' do
+      expect(subject_instance).to receive(:perform).with(random_resource)
+      subject.debug_resource(random_resource)
     end
   end
 
   describe '#enable_debug' do
-    it 'shoult enable debug' do
-      expect(@crawler_class.debug).to eq false
-
-      @crawler_class.adapters.each do |adapter|
-        expect(adapter.debug).to eq false
-      end
-
-      @crawler_class.enable_debug
-
-      expect(@crawler_class.debug).to eq true
-
-      @crawler_class.adapters.each do |adapter|
-        expect(adapter.debug).to eq true
-      end
+    it 'enables debug mode' do
+      subject.enable_debug
     end
   end
 
   describe '#debug_first' do
-    it 'shoult return first resource' do
-      expect(@crawler_class.debug_first).to eq @crawler_class.params[:collection][0..0]
+    it 'debugs first resource' do
+      expect(subject_instance).to receive(:perform).with(resources.first)
+      subject.debug_first
     end
 
-    it 'shoult return first three resources' do
-      expect(@crawler_class.debug_first(3)).to eq @crawler_class.params[:collection][0..2]
+    it 'debugs first three resources' do
+      expect(subject_instance).to receive(:perform).with(resources[0]).ordered
+      expect(subject_instance).to receive(:perform).with(resources[1]).ordered
+      expect(subject_instance).to receive(:perform).with(resources[2]).ordered
+      subject.debug_first(3)
     end
-  end 
+  end
 
   describe '#debug_random' do
-    it 'shoult return random resources' do
-      results = 10.times.map{ @crawler_class.debug_random }
-      expect(results.uniq.count).to be > 1
+    it 'debugs resources' do
+      expect(subject_instance).to receive(:perform).exactly(random_count).times
+      subject.debug_random(random_count)
     end
-  end 
+  end
 
   describe '#debug_last' do
-    it 'shoult return last resource' do
-      expect(@crawler_class.debug_last).to eq @crawler_class.params[:collection][-1..-1]
+    it 'debugs last resource' do
+      expect(subject_instance).to receive(:perform).with(resources.last)
+      subject.debug_last
     end
 
-    it 'shoult return last three resources' do
-      expect(@crawler_class.debug_last(3)).to eq @crawler_class.params[:collection][-3..-1]
+    it 'debugs last three resources' do
+      expect(subject_instance).to receive(:perform).with(resources[-1]).ordered
+      expect(subject_instance).to receive(:perform).with(resources[-2]).ordered
+      expect(subject_instance).to receive(:perform).with(resources[-3]).ordered
+      subject.debug_last(3)
     end
-  end 
+  end
 
   describe '#debug_all' do
-    it 'shoult return whole collection' do
-      expect(@crawler_class.debug_all).to eq @crawler_class.params[:collection]
+    it 'debugs whole collection' do
+      expect(subject_instance).to receive(:perform).exactly(resources.count).times
+      subject.debug_all
     end
   end
 end

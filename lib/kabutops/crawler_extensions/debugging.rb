@@ -17,7 +17,7 @@ module Kabutops
         end
 
         def debug_last count=1
-          params[:collection][(0 - count)..-1].map{ |r| debug_resource(r) }
+          params[:collection].reverse.take(count).map{ |r| debug_resource(r) }
         end
 
         def debug_all

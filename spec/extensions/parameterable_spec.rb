@@ -3,12 +3,10 @@
 describe Kabutops::Extensions::Parameterable do
   describe '#params' do
     it 'should define methods' do
-      klass = Object.clone
-      klass.send(:include, Kabutops::Extensions::Parameterable)
-      klass.instance_eval do
-        params :method1, :method2
-        params :method3
-      end
+      klass = Class.new
+      klass.include(Kabutops::Extensions::Parameterable)
+      klass.params(:method1, :method2)
+      klass.params(:method3)
       object = klass.new
 
       expect(object.methods).to include :params
