@@ -13,7 +13,7 @@ describe Kabutops::Adapters::ElasticSearch do
       Hashie::Mash.new(id: 344, url: 'http://foo1', name: 'foo', updated_at: Time.now.to_i - 1000),
       Hashie::Mash.new(id: 345, url: 'http://foo2', name: 'bar', updated_at: Time.now.to_i - 2000),
       Hashie::Mash.new(id: 346, url: 'http://foo3', name: 'foobar', updated_at: Time.now.to_i - 4000),
-      Hashie::Mash.new(id: 347, url: 'http://foo3', name: 'foobar', updated_at: Time.now.to_i - 8000),
+      Hashie::Mash.new(id: 347, url: 'http://foo3', name: 'barfoo', updated_at: Time.now.to_i - 8000),
     ]
   end
   let(:random_resource) { resources.sample }

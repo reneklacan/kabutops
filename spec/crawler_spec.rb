@@ -4,12 +4,17 @@ class CustomCrawler < Kabutops::Crawler
 end
 
 describe CustomCrawler do
-  subject { subject_class.new }
+  subject do
+    subject = subject_class.new
+    allow(subject).to receive(:logger).and_return(logger)
+    subject
+  end
   let(:subject_class) do
     name = 'Crawler_' + SecureRandom.hex
     eval("class #{name} < Kabutops::Crawler; end")
     name.constantize
   end
+  let(:logger) { double(:logger) }
   let(:adapters) { 10.times.map{ double(:adapter) } }
   let(:resource) { Hashie::Mash.new(id: 123, url: 'http://yuna.sk/fruit') }
   let(:agent) { double(:agent, page: page) }
@@ -78,6 +83,26 @@ describe CustomCrawler do
 
         subject.perform(resource)
       end
+
+      context 'error handling' do
+        it 'logs and raises error' do
+          allow(subject).to receive(:crawl).and_raise(Mechanize::ResponseCodeError.new(double(code: 500)))
+          expect(logger).to receive(:error).at_least(1).times
+
+          expect {
+            subject.perform(resource)
+          }.to raise_error(Mechanize::ResponseCodeError)
+        end
+
+        it 'just raises error' do
+          allow(subject).to receive(:crawl).and_raise(Mechanize::ResponseCodeError.new(double(code: 500)))
+          subject_class.enable_debug
+
+          expect {
+            subject.perform(resource)
+          }.to raise_error(Mechanize::ResponseCodeError)
+        end
+      end
     end
 
     describe '#<<' do
@@ -96,6 +121,22 @@ describe CustomCrawler do
 
         expect(result).to be_a Nokogiri::HTML::Document
         expect(result.to_html).to include page.body
+      end
+
+      context 'error handling' do
+        it 'raises an error' do
+          allow(subject).to receive(:get_cache_or_hit).and_raise(Mechanize::ResponseCodeError.new(double(code: 500)))
+          expect(logger).to receive(:error).at_least(1).times
+
+          expect {
+            subject.crawl(resource)
+          }.to raise_error(Mechanize::ResponseCodeError)
+        end
+
+        it 'returns nil when page doesnt exist (404)' do
+          allow(subject).to receive(:get_cache_or_hit).and_raise(Mechanize::ResponseCodeError.new(double(code: 404)))
+          expect(subject.crawl(resource)).to be_nil
+        end
       end
     end
 

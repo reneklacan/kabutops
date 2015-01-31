@@ -99,7 +99,7 @@ module Kabutops
       if e.response_code.to_i == 404
         nil
       else
-        p e.response_code
+        logger.error(e.response_code)
         raise
       end
     end
