@@ -8,7 +8,6 @@ require 'moneta'
 require 'pstore'
 require 'mechanize'
 require 'elasticsearch'
-require 'mongo'
 require 'logger'
 
 require 'kabutops/configuration'

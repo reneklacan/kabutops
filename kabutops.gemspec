@@ -24,8 +24,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'elasticsearch', '~> 1.0'
   s.add_dependency 'hashie', '~> 3.0'
   s.add_dependency 'json', '~> 1.8'
-  s.add_dependency 'mongo', '~> 1.10'
-  s.add_dependency 'bson_ext', '~> 1.10'
 
   s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'pry-byebug'
