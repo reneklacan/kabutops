@@ -1,9 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-class CustomCrawler < Kabutops::Crawler
-end
-
-describe CustomCrawler do
+describe Kabutops::Crawler do
   subject do
     subject = subject_class.new
     allow(subject).to receive(:logger).and_return(logger)
