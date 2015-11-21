@@ -1,9 +1,9 @@
 # Kabutops [![Code Climate](https://codeclimate.com/github/reneklacan/kabutops.png)](https://codeclimate.com/github/reneklacan/kabutops) [![Coverage](https://codeclimate.com/github/reneklacan/kabutops/coverage.png)](https://codeclimate.com/github/reneklacan/kabutops)
 
-Kabutops is a ruby library whichs aims to simplify creating website crawlers.
+Kabutops is a ruby library which aims to simplify creating website crawlers.
 You can define what will be crawled and how it will be saved in the short class definition.
 
-With Kabutops you can easily save data to **ElasticSearch**.
+With Kabutops you can easily save data to **ElasticSearch 2.x**.
 
 Example for every kind of database are located
 in the [examples directory](https://github.com/reneklacan/kabutops/tree/master/examples)

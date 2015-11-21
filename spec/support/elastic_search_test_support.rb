@@ -22,11 +22,8 @@ module ElasticSearchTestSupport
   end
 
   def delete_all
-    if index_exists?
-      client.delete_by_query(index: ES_INDEX, body: { query: { match_all: {} } })
-    else
-      create_index
-    end
+    client.indices.delete(index: ES_INDEX)
+  rescue Elasticsearch::Transport::Transport::Errors::NotFound
   end
 
   def flush

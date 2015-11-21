@@ -20,9 +20,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'mechanize', '~> 2.7'
   s.add_dependency 'cachy', '~> 0.4'
   s.add_dependency 'moneta', '~> 0.7'
-  s.add_dependency 'sidekiq', '~> 3.1'
-  s.add_dependency 'elasticsearch', '~> 1.0'
-  s.add_dependency 'hashie', '~> 3.0'
+  s.add_dependency 'sidekiq', '~> 4.0'
+  s.add_dependency 'elasticsearch', '~> 1.0.14'
+  s.add_dependency 'hashie', '~> 3.4'
   s.add_dependency 'json', '~> 1.8'
 
   s.add_development_dependency 'rspec', '~> 3.0'

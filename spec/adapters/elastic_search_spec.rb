@@ -61,7 +61,7 @@ describe Kabutops::Adapters::ElasticSearch do
     it 'sets default values' do
       expect(subject.client.transport.hosts.count).to eq 1
       expect(subject.client.transport.hosts.first[:host]).to eq 'localhost'
-      expect(subject.client.transport.hosts.first[:port]).to eq '9200'
+      expect(subject.client.transport.hosts.first[:port]).to eq 9200
     end
 
     it 'should be set accourding to parameters' do
@@ -70,7 +70,7 @@ describe Kabutops::Adapters::ElasticSearch do
 
       expect(subject.client.transport.hosts.count).to eq 1
       expect(subject.client.transport.hosts.first[:host]).to eq 'yuna.sk'
-      expect(subject.client.transport.hosts.first[:port]).to eq '7777'
+      expect(subject.client.transport.hosts.first[:port]).to eq 7777
     end
   end
 end
