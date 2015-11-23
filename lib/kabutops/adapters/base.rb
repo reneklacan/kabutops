@@ -6,7 +6,7 @@ module Kabutops
 
     class Base
       def initialize(&block)
-        instance_eval(&block)
+        instance_eval(&block) if block_given?
       end
 
       def enable_debug

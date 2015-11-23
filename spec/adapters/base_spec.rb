@@ -5,7 +5,7 @@ describe Kabutops::Adapters::Base do
 
   describe '#initialize' do
     it 'yields block' do
-      expect{ |b| described_class.new(&b) }.to yield_with_no_args
+      expect{ |b| described_class.new(&b) }.to yield_with_args(instance_of(described_class))
     end
   end
 

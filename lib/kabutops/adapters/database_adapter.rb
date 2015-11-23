@@ -36,6 +36,7 @@ module Kabutops
         logger.info(save ? result.to_hash : 'not valid for save') if debug
         store(result) if save && !debug
         notify(:after_save, result) if save
+        result
       end
 
       def store result

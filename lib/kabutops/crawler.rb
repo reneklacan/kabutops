@@ -70,7 +70,7 @@ module Kabutops
       return if page.nil?
       return unless (self.class.notify(:store_if, resource, page) || []).all?
 
-      adapters.each do |adapter|
+      adapters.map do |adapter|
         adapter.process(resource, page)
       end
     rescue Exception => e
